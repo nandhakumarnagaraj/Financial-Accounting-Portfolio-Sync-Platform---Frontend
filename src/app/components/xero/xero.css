@@ -1,0 +1,17 @@
+.card {
+  border-radius: 12px;
+}
+
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+.list-group-item {
+  border: none;
+  padding-bottom: 1rem;
+}
+
+.list-group-item:last-child {
+  padding-bottom: 0;
+}

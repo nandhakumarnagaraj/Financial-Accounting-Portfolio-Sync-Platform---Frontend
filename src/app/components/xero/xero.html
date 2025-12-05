@@ -1,0 +1,127 @@
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-md-8">
+      <h1 class="h2">Xero Integration</h1>
+      <p class="text-muted">Manage your Xero account connection and settings</p>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = ''"></button>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ success }}
+    <button type="button" class="btn-close" (click)="success = ''"></button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0">Connection Status</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="syncStatus?.connected" class="alert alert-success">
+            <i class="bi bi-check-circle"></i>
+            <strong>Connected</strong>
+            <p class="mb-0 mt-2">Your Xero account is successfully connected.</p>
+            <p class="text-muted small" *ngIf="syncStatus?.tokenExpiry">
+              Token expires: {{ syncStatus.tokenExpiry | date:'medium' }}
+            </p>
+          </div>
+
+          <div *ngIf="!syncStatus?.connected" class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Not Connected</strong>
+            <p class="mb-0 mt-2">Click the button below to authorize your Xero account.</p>
+          </div>
+
+          <div class="mt-3">
+            <button 
+              *ngIf="!syncStatus?.connected"
+              class="btn btn-primary w-100" 
+              (click)="connectXero()"
+              [disabled]="loading"
+            >
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ loading ? 'Connecting...' : 'Connect Xero Account' }}
+            </button>
+
+            <div *ngIf="syncStatus?.connected" class="d-grid gap-2">
+              <button 
+                class="btn btn-warning" 
+                (click)="refreshToken()"
+                [disabled]="loading"
+              >
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                Refresh Token
+              </button>
+              <button 
+                class="btn btn-danger" 
+                (click)="disconnectXero()"
+                [disabled]="disconnecting"
+              >
+                <span *ngIf="disconnecting" class="spinner-border spinner-border-sm me-2"></span>
+                Disconnect Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0">Account Details</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="syncStatus" class="list-group list-group-flush">
+            <div class="list-group-item px-0">
+              <small class="text-muted">Connection Status</small>
+              <p class="mb-0 fw-bold">
+                <span class="badge" [ngClass]="syncStatus.connected ? 'bg-success' : 'bg-danger'">
+                  {{ syncStatus.connected ? 'Connected' : 'Disconnected' }}
+                </span>
+              </p>
+            </div>
+            <div class="list-group-item px-0" *ngIf="syncStatus.hasTenantId">
+              <small class="text-muted">Tenant ID</small>
+              <p class="mb-0 fw-bold text-truncate">Available</p>
+            </div>
+            <div class="list-group-item px-0" *ngIf="syncStatus.tokenExpiry">
+              <small class="text-muted">Token Expiry</small>
+              <p class="mb-0 fw-bold">{{ syncStatus.tokenExpiry | date:'medium' }}</p>
+            </div>
+          </div>
+          <div *ngIf="!syncStatus" class="text-center text-muted py-4">
+            <p>No connection information available</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0">About Xero Integration</h5>
+        </div>
+        <div class="card-body">
+          <p>This platform securely integrates with Xero to sync your financial data including:</p>
+          <ul>
+            <li>Invoices and payments</li>
+            <li>Bank accounts and transactions</li>
+            <li>Chart of accounts</li>
+          </ul>
+          <p class="text-muted small mb-0">
+            Your Xero authorization is stored securely and only used to sync your financial data.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

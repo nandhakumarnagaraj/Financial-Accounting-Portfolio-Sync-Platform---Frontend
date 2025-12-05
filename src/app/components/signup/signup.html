@@ -1,0 +1,101 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg">
+        <div class="card-body p-5">
+          <h2 class="text-center mb-4">Create Account</h2>
+          <h5 class="text-center text-muted mb-4">Join Financial Sync Platform</h5>
+
+          <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" (click)="error = ''"></button>
+          </div>
+
+          <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ success }}
+          </div>
+
+          <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="username" 
+                formControlName="username"
+                [class.is-invalid]="submitted && f['username'].errors"
+                placeholder="Choose a username"
+              >
+              <div class="invalid-feedback" *ngIf="submitted && f['username'].errors">
+                <span *ngIf="f['username'].errors['required']">Username is required</span>
+                <span *ngIf="f['username'].errors['minlength']">Username must be at least 3 characters</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                formControlName="email"
+                [class.is-invalid]="submitted && f['email'].errors"
+                placeholder="Enter your email"
+              >
+              <div class="invalid-feedback" *ngIf="submitted && f['email'].errors">
+                <span *ngIf="f['email'].errors['required']">Email is required</span>
+                <span *ngIf="f['email'].errors['email']">Please enter a valid email</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                formControlName="password"
+                [class.is-invalid]="submitted && f['password'].errors"
+                placeholder="Create a password"
+              >
+              <div class="invalid-feedback" *ngIf="submitted && f['password'].errors">
+                <span *ngIf="f['password'].errors['required']">Password is required</span>
+                <span *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="confirmPassword" 
+                formControlName="confirmPassword"
+                [class.is-invalid]="submitted && (f['confirmPassword'].errors || signupForm.errors?.['passwordMismatch'])"
+                placeholder="Confirm your password"
+              >
+              <div class="invalid-feedback" *ngIf="submitted && signupForm.errors?.['passwordMismatch']">
+                Passwords do not match
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              class="btn btn-primary w-100 mb-3"
+              [disabled]="loading"
+            >
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ loading ? 'Creating Account...' : 'Sign Up' }}
+            </button>
+          </form>
+
+          <hr>
+          <p class="text-center mb-0">
+            Already have an account? 
+            <a routerLink="/login" class="text-primary fw-bold">Login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

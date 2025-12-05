@@ -1,15 +1,15 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Navbar } from "./components/navbar/navbar";
-import { User } from './models/auth.model';
+import { Component, OnInit } from '@angular/core';
+import { User } from '../../models/auth.model';
 import { Observable } from 'rxjs';
-import { AuthService } from './services/auth';
+import { AuthService } from '../../services/auth';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, Navbar],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  selector: 'app-navbar',
+  imports: [CommonModule,FormsModule],
+  templateUrl: './navbar.html',
+  styleUrl: './navbar.css',
 })
 export class NavbarComponent implements OnInit {
   currentUser$!: Observable<User | null>;
@@ -32,4 +32,3 @@ export class NavbarComponent implements OnInit {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 }
-
