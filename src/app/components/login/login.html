@@ -30,14 +30,24 @@
 
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
-              <input 
-                type="password" 
-                class="form-control" 
-                id="password" 
-                formControlName="password"
-                [class.is-invalid]="submitted && f['password'].errors"
-                placeholder="Enter your password"
-              >
+              <div class="input-group">
+                <input 
+                  [type]="showPassword ? 'text' : 'password'" 
+                  class="form-control" 
+                  id="password" 
+                  formControlName="password"
+                  [class.is-invalid]="submitted && f['password'].errors"
+                  placeholder="Enter your password"
+                >
+                <button 
+                  class="btn btn-outline-secondary" 
+                  type="button" 
+                  (click)="togglePasswordVisibility()"
+                  aria-label="Toggle password visibility"
+                >
+                  <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
               <div class="invalid-feedback" *ngIf="submitted && f['password'].errors">
                 <span *ngIf="f['password'].errors['required']">Password is required</span>
                 <span *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</span>

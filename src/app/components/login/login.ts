@@ -1,7 +1,7 @@
-import { Component, OnInit } from ' @angular/core';
-import { CommonModule } from ' @angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from ' @angular/forms';
-import { RouterLink, Router, ActivatedRoute } from ' @angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
  @Component({
@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   submitted = false;
   error = '';
   returnUrl = '';
+  showPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,6 +32,10 @@ export class LoginComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   get f() { return this.loginForm.controls; }
