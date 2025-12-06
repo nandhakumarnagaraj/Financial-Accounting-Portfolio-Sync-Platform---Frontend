@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { XeroService } from '../../services/xero';
 import { XeroInvoiceDTO } from '../../models/xero.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-invoices',
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './invoices.html',
   styleUrl: './invoices.css',
 })
@@ -15,7 +17,7 @@ export class InvoicesComponent implements OnInit {
   selectedStatus = '';
   statusOptions = ['DRAFT', 'SUBMITTED', 'AUTHORISED', 'PAID', 'VOIDED'];
 
-  constructor(private xeroService: XeroService) {}
+  constructor(private xeroService: XeroService) { }
 
   ngOnInit(): void {
     this.loadInvoices();

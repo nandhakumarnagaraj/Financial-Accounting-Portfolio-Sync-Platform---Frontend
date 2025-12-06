@@ -1,13 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from "./components/navbar/navbar";
 import { User } from './models/auth.model';
 import { Observable } from 'rxjs';
 import { AuthService } from './services/auth';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar],
+  imports: [RouterOutlet, NavbarComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -16,7 +15,7 @@ export class NavbarComponent implements OnInit {
   isAuthenticated$!: Observable<boolean>;
   mobileMenuOpen = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.currentUser$ = this.authService.currentUser$;
