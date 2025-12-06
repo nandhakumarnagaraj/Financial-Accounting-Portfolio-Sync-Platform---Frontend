@@ -29,11 +29,6 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/sync" routerLinkActive="active">
-            <i class="bi bi-arrow-repeat"></i> Sync
-          </a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" routerLink="/invoices" routerLinkActive="active">
             <i class="bi bi-file-earmark-text"></i> Invoices
           </a>
@@ -50,8 +45,6 @@
             {{ (currentUser$ | async)?.username }}
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" routerLink="/dashboard">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
           </ul>
         </li>
