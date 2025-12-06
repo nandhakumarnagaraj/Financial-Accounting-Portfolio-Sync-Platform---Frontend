@@ -45,7 +45,7 @@ export class AuthService {
     );
   }
 
-  getCurrentUser(): Observable<User> {
+  getCurrentUser(): Observable<User | null> {
     return this.http.get<User>(`${this.userUrl}/me`).pipe(
       tap(user => {
         this.setCurrentUser(user);
@@ -53,7 +53,7 @@ export class AuthService {
       }),
       catchError(error => {
         console.error('Error fetching current user:', error);
-        return of(null as any);
+        return of(null);
       })
     );
   }

@@ -4,10 +4,12 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink, RouterLinkActive } from '@angular/router'; // Add RouterLinkActive for routerLinkActiveOptions
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule,FormsModule],
+  standalone: true, // Mark as standalone
+  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive], // Add RouterLinkActive to imports
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

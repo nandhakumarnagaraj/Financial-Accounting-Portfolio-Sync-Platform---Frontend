@@ -58,7 +58,7 @@
           <div class="card-body text-center">
             <h6 class="text-muted mb-2">Last Sync</h6>
             <p class="mb-0" *ngIf="syncStatus?.tokenExpiry">
-              {{ syncStatus.tokenExpiry | date:'short' }}
+              {{ syncStatus?.tokenExpiry | date:'short' }}
             </p>
             <small class="text-muted" *ngIf="!syncStatus?.tokenExpiry">No sync yet</small>
           </div>
@@ -67,6 +67,7 @@
     </div>
 
     <!-- Quick Actions -->
+    <app-analytics-chart></app-analytics-chart>
     <div class="row mb-4">
       <div class="col-12">
         <div class="card border-0 shadow-sm">

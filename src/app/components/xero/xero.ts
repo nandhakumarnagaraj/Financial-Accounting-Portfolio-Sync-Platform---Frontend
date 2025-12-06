@@ -1,9 +1,9 @@
-import { Component, OnInit } from ' @angular/core';
-import { CommonModule } from ' @angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { SyncStatusResponse, XeroAuthResponse } from '../../models/xero.model';
 import { XeroService } from '../../services/xero';
-import { FormsModule } from ' @angular/forms';
-import { Router, ActivatedRoute } from ' @angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
  @Component({
   selector: 'app-xero',
@@ -32,7 +32,7 @@ export class XeroComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/sync';
 
     // Check for OAuth callback status
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params: { status?: string, message?: string }) => {
       if (params['status'] === 'success') {
         this.success = '✅ Xero connected successfully! Please sync your data.';
         this.loadStatus();

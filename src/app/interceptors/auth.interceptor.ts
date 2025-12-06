@@ -1,9 +1,9 @@
-import { HttpInterceptorFn } from ' @angular/common/http';
-import { inject } from ' @angular/core';
-import { Router } from ' @angular/router';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
+export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const token = localStorage.getItem('auth_token');
   const router = inject(Router);
 

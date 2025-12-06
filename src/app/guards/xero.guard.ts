@@ -1,9 +1,9 @@
-import { CanActivateFn, Router } from ' @angular/router';
-import { inject } from ' @angular/core';
+import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { inject } from '@angular/core';
 import { XeroService } from '../services/xero';
 import { map, take } from 'rxjs/operators';
 
-export const xeroGuard: CanActivateFn = (route, state) => {
+export const xeroGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const xeroService = inject(XeroService);
   const router = inject(Router);
 

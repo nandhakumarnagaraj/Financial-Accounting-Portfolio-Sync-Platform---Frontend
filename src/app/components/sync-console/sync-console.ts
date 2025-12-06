@@ -1,10 +1,10 @@
-import { Component, OnInit } from ' @angular/core';
-import { CommonModule } from ' @angular/common';
-import { RouterLink } from ' @angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { XeroService } from '../../services/xero';
 import { SyncAllResponse } from '../../models/xero.model';
 import { finalize } from 'rxjs/operators';
-import { ChangeDetectorRef } from ' @angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 
  @Component({
   selector: 'app-sync-console',

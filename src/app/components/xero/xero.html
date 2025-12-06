@@ -131,27 +131,27 @@
             <div class="list-group-item px-0">
               <small class="text-muted">Connection Status</small>
               <p class="mb-0 fw-bold">
-                <span class="badge" [ngClass]="syncStatus?.connected ? 'bg-success' : 'bg-danger'">
-                  {{ syncStatus?.connected ? '✓ Connected' : '✗ Disconnected' }}
+                <span class="badge" [ngClass]="syncStatus.connected ? 'bg-success' : 'bg-danger'">
+                  {{ syncStatus.connected ? '✓ Connected' : '✗ Disconnected' }}
                 </span>
               </p>
             </div>
 
-            <div class="list-group-item px-0" *ngIf="syncStatus?.hasTenantId">
+            <div class="list-group-item px-0" *ngIf="syncStatus.hasTenantId">
               <small class="text-muted">Tenant ID</small>
               <p class="mb-0 fw-bold">
                 <i class="bi bi-check-circle text-success"></i> Available
               </p>
             </div>
 
-            <div class="list-group-item px-0" *ngIf="syncStatus?.tokenExpiry">
+            <div class="list-group-item px-0" *ngIf="syncStatus.tokenExpiry">
               <small class="text-muted">Token Expiry</small>
               <p class="mb-0 fw-bold">
-                {{ syncStatus?.tokenExpiry | date:'medium' }}
+                {{ syncStatus.tokenExpiry | date:'medium' }}
               </p>
             </div>
 
-            <div class="list-group-item px-0" *ngIf="!syncStatus?.connected">
+            <div class="list-group-item px-0" *ngIf="!syncStatus.connected">
               <small class="text-muted">Next Step</small>
               <p class="mb-0 fw-bold text-primary">
                 <i class="bi bi-arrow-right-circle"></i> Connect your account

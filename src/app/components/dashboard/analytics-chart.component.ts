@@ -1,10 +1,10 @@
-import { Component, OnInit } from ' @angular/core';
-import { CommonModule } from ' @angular/common';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartData } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../services/dashboard';
+import { ChartConfiguration, ChartData } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
- @Component({
+@Component({
   selector: 'app-analytics-chart',
   standalone: true,
   imports: [CommonModule, BaseChartDirective],
@@ -66,7 +66,7 @@ import { DashboardService } from '../../services/dashboard';
   `]
 })
 export class AnalyticsChartComponent implements OnInit {
-  
+
   loadingRevenue = true;
   loadingPie = true;
 
@@ -100,7 +100,7 @@ export class AnalyticsChartComponent implements OnInit {
     }
   };
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
     this.loadChartData();

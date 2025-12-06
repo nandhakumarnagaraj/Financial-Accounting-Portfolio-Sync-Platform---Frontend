@@ -1,4 +1,4 @@
-import { Routes } from ' @angular/router';
+import { Routes } from '@angular/router';
 import { NoAuthGuard } from './guards/no-auth.guard';
 import { authGuard } from './guards/auth.guard';
 import { xeroGuard } from './guards/xero.guard';

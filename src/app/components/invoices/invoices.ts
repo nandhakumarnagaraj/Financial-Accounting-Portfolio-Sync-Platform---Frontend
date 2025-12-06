@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { XeroService } from '../../services/xero';
-import { XeroInvoiceDTO } from '../../models/xero.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { XeroService } from '../../services/xero';
+import { XeroInvoiceDTO } from '../../models/xero.model';
 
 @Component({
   selector: 'app-invoices',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './invoices.html',
   styleUrl: './invoices.css',
@@ -16,6 +17,9 @@ export class InvoicesComponent implements OnInit {
   error = '';
   selectedStatus = '';
   statusOptions = ['DRAFT', 'SUBMITTED', 'AUTHORISED', 'PAID', 'VOIDED'];
+  currentPage = 0;
+  pageSize = 20;
+  totalInvoices = 0;
 
   constructor(private xeroService: XeroService) { }
 
@@ -26,9 +30,11 @@ export class InvoicesComponent implements OnInit {
   loadInvoices(): void {
     this.loading = true;
     this.error = '';
-    this.xeroService.getInvoices(this.selectedStatus).subscribe({
+    this.xeroService.getInvoices(this.selectedStatus, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
-        this.invoices = response.data;
+        this.invoices = response.content;
+        this.totalInvoices = response.totalElements;
+        this.currentPage = response.number;
         this.loading = false;
       },
       error: (err) => {
@@ -51,5 +57,10 @@ export class InvoicesComponent implements OnInit {
       'VOIDED': 'bg-danger'
     };
     return classes[status] || 'bg-secondary';
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadInvoices();
   }
 }

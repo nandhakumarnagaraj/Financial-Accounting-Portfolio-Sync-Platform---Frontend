@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment'; // Import environment
 import {
   XeroInvoiceDTO,
   XeroAccountDTO,
@@ -9,15 +10,15 @@ import {
   SyncStatusResponse,
   XeroAuthResponse,
   XeroCallbackResponse,
-  SyncAllResponse
+  SyncAllResponse,
+  Page
 } from '../models/xero.model';
-import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class XeroService {
-  private apiUrl = 'http://localhost:8080/api/xero';
+  private apiUrl = `${environment.apiUrl}/xero`; // Use environment variable
   
   private syncStatusSubject = new BehaviorSubject<SyncStatusResponse | null>(null);
   public syncStatus$ = this.syncStatusSubject.asObservable();
@@ -45,8 +46,8 @@ export class XeroService {
     ).subscribe();
   }
 
-  disconnectXero(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/disconnect`, {}).pipe(
+  disconnectXero(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/disconnect`, {}).pipe(
       tap(() => {
         this.syncStatusSubject.next(null);
         this.checkConnectionStatus();
@@ -74,15 +75,15 @@ export class XeroService {
     return this.http.post<SyncAllResponse>(`${this.apiUrl}/sync-all`, {});
   }
 
-  getInvoices(status?: string, page: number = 0, size: number = 50): Observable<any> {
+  getInvoices(status?: string, page: number = 0, size: number = 50): Observable<Page<XeroInvoiceDTO>> {
     let url = `${this.apiUrl}/invoices?page=${page}&size=${size}`;
     if (status) {
       url += `&status=${status}`;
     }
-    return this.http.get<any>(url);
+    return this.http.get<Page<XeroInvoiceDTO>>(url);
   }
 
-  getAccounts(type?: string, status?: string): Observable<any> {
+  getAccounts(type?: string, status?: string): Observable<XeroAccountDTO[]> {
     let url = `${this.apiUrl}/accounts`;
     const params = new URLSearchParams();
     if (type) params.append('type', type);
@@ -90,11 +91,11 @@ export class XeroService {
     if (params.toString()) {
       url += '?' + params.toString();
     }
-    return this.http.get<any>(url);
+    return this.http.get<XeroAccountDTO[]>(url);
   }
 
-  refreshToken(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/refresh-token`, {}).pipe(
+  refreshToken(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/refresh-token`, {}).pipe(
       tap(() => this.checkConnectionStatus()),
       catchError(error => {
         console.error('Error refreshing token:', error);
