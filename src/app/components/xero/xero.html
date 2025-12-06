@@ -63,7 +63,7 @@
           <div class="mt-3">
             <!-- Connect Button -->
             <button
-              *ngIf="!syncStatus?.connected"
+              *ngIf="!syncStatus?.connected" 
               class="btn btn-primary w-100 py-3"
               (click)="connectXero()"
               [disabled]="loading">
@@ -84,15 +84,6 @@
               </button>
 
               <button
-                class="btn btn-outline-primary"
-                (click)="goToDashboard()">
-                <i class="bi bi-speedometer2 me-2"></i>
-                Go to Dashboard
-              </button>
-
-              <hr>
-
-              <button
                 class="btn btn-outline-warning"
                 (click)="refreshToken()"
                 [disabled]="loading">
@@ -107,7 +98,7 @@
                 [disabled]="disconnecting">
                 <span *ngIf="disconnecting" class="spinner-border spinner-border-sm me-2"></span>
                 <i class="bi bi-x-circle me-2" *ngIf="!disconnecting"></i>
-                Disconnect & Logout
+                Disconnect
               </button>
 
             </div>

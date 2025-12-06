@@ -1,9 +1,9 @@
-import { Component, OnInit } from ' @angular/core';
-import { CommonModule } from ' @angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { SyncStatusResponse, XeroAuthResponse } from '../../models/xero.model';
 import { XeroService } from '../../services/xero';
-import { FormsModule } from ' @angular/forms';
-import { Router, ActivatedRoute } from ' @angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
  @Component({
   selector: 'app-xero',
@@ -71,10 +71,6 @@ export class XeroComponent implements OnInit {
 
   goToSync(): void {
     this.router.navigate(['/sync']);
-  }
-
-  goToDashboard(): void {
-    this.router.navigate(['/dashboard']);
   }
 
   disconnectXero(): void {
