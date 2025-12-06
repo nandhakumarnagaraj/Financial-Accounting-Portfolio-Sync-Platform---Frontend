@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-signup',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
@@ -29,7 +29,7 @@ export class SignupComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-      roles: [['ROLE_ANALYST']]
+      roles: ['', Validators.required]
     }, {
       validators: this.passwordMatchValidator
     });
@@ -74,4 +74,3 @@ export class SignupComponent implements OnInit {
     });
   }
 }
-

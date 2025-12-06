@@ -74,8 +74,28 @@
                 [class.is-invalid]="submitted && (f['confirmPassword'].errors || signupForm.errors?.['passwordMismatch'])"
                 placeholder="Confirm your password"
               >
+              <div class="invalid-feedback" *ngIf="submitted && f['confirmPassword'].errors">
+                <span *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required</span>
+              </div>
               <div class="invalid-feedback" *ngIf="submitted && signupForm.errors?.['passwordMismatch']">
                 Passwords do not match
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="roles" class="form-label">Role</label>
+              <select 
+                class="form-select" 
+                id="roles" 
+                formControlName="roles"
+                [class.is-invalid]="submitted && f['roles'].errors"
+              >
+                <option value="" disabled>Select a role</option>
+                <option value="ROLE_ACCOUNTANT">Accountant</option>
+                <option value="ROLE_ANALYST">Analyst</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="submitted && f['roles'].errors">
+                <span *ngIf="f['roles'].errors['required']">Role is required</span>
               </div>
             </div>
 
