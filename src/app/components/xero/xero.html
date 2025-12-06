@@ -1,11 +1,13 @@
 <div class="container-fluid py-4">
-  <div class="row">
+
+  <div class="row mb-4">
     <div class="col-md-8">
-      <h1 class="h2">Xero Integration</h1>
-      <p class="text-muted">Manage your Xero account connection and settings</p>
+      <h1 class="h2">🔗 Xero Integration</h1>
+      <p class="text-muted">Connect your Xero account to sync financial data</p>
     </div>
   </div>
 
+  <!-- Alerts -->
   <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
     {{ error }}
     <button type="button" class="btn-close" (click)="error = ''"></button>
@@ -17,108 +19,177 @@
   </div>
 
   <div class="row">
+    <!-- Connection Status -->
     <div class="col-md-6">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-bottom">
           <h5 class="mb-0">Connection Status</h5>
         </div>
+
         <div class="card-body">
+
+          <!-- Connected -->
           <div *ngIf="syncStatus?.connected" class="alert alert-success">
-            <i class="bi bi-check-circle"></i>
+            <i class="bi bi-check-circle-fill"></i>
             <strong>Connected</strong>
+
             <p class="mb-0 mt-2">Your Xero account is successfully connected.</p>
-            <p class="text-muted small" *ngIf="syncStatus?.tokenExpiry">
-              Token expires: {{ syncStatus.tokenExpiry | date:'medium' }}
+
+            <p class="text-muted small mt-2" *ngIf="syncStatus?.tokenExpiry">
+              <i class="bi bi-clock"></i> Token expires: {{ syncStatus?.tokenExpiry | date:'medium' }}
             </p>
           </div>
 
+          <!-- Not Connected -->
           <div *ngIf="!syncStatus?.connected" class="alert alert-warning">
-            <i class="bi bi-exclamation-triangle"></i>
+            <i class="bi bi-exclamation-triangle-fill"></i>
             <strong>Not Connected</strong>
-            <p class="mb-0 mt-2">Click the button below to authorize your Xero account.</p>
+
+            <p class="mb-0 mt-2">
+              Please connect your Xero account to continue.
+            </p>
+
+            <div class="mt-3">
+              <h6 class="fw-bold">Setup Steps:</h6>
+              <ol class="mb-0">
+                <li>Click "Connect Xero Account" below</li>
+                <li>Login to your Xero account</li>
+                <li>Authorize the application</li>
+                <li>Sync your data</li>
+              </ol>
+            </div>
           </div>
 
           <div class="mt-3">
-            <button 
+            <!-- Connect Button -->
+            <button
               *ngIf="!syncStatus?.connected"
-              class="btn btn-primary w-100" 
+              class="btn btn-primary w-100 py-3"
               (click)="connectXero()"
-              [disabled]="loading"
-            >
+              [disabled]="loading">
+
               <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
-              {{ loading ? 'Connecting...' : 'Connect Xero Account' }}
+              <i class="bi bi-link-45deg" *ngIf="!loading"></i>
+              {{ loading ? 'Connecting to Xero...' : 'Connect Xero Account' }}
             </button>
 
+            <!-- If Connected -->
             <div *ngIf="syncStatus?.connected" class="d-grid gap-2">
-              <button 
-                class="btn btn-warning" 
+
+              <button
+                class="btn btn-success py-3"
+                (click)="goToSync()">
+                <i class="bi bi-arrow-repeat me-2"></i>
+                Sync Your Data
+              </button>
+
+              <button
+                class="btn btn-outline-primary"
+                (click)="goToDashboard()">
+                <i class="bi bi-speedometer2 me-2"></i>
+                Go to Dashboard
+              </button>
+
+              <hr>
+
+              <button
+                class="btn btn-outline-warning"
                 (click)="refreshToken()"
-                [disabled]="loading"
-              >
+                [disabled]="loading">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                <i class="bi bi-arrow-clockwise me-2" *ngIf="!loading"></i>
                 Refresh Token
               </button>
-              <button 
-                class="btn btn-danger" 
+
+              <button
+                class="btn btn-danger"
                 (click)="disconnectXero()"
-                [disabled]="disconnecting"
-              >
+                [disabled]="disconnecting">
                 <span *ngIf="disconnecting" class="spinner-border spinner-border-sm me-2"></span>
-                Disconnect Account
+                <i class="bi bi-x-circle me-2" *ngIf="!disconnecting"></i>
+                Disconnect & Logout
               </button>
+
             </div>
           </div>
+
         </div>
       </div>
     </div>
 
+    <!-- Account Details -->
     <div class="col-md-6">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-bottom">
           <h5 class="mb-0">Account Details</h5>
         </div>
+
         <div class="card-body">
-          <div *ngIf="syncStatus" class="list-group list-group-flush">
+
+          <div *ngIf="syncStatus; else noStatus" class="list-group list-group-flush">
+
             <div class="list-group-item px-0">
               <small class="text-muted">Connection Status</small>
               <p class="mb-0 fw-bold">
-                <span class="badge" [ngClass]="syncStatus.connected ? 'bg-success' : 'bg-danger'">
-                  {{ syncStatus.connected ? 'Connected' : 'Disconnected' }}
+                <span class="badge" [ngClass]="syncStatus?.connected ? 'bg-success' : 'bg-danger'">
+                  {{ syncStatus?.connected ? '✓ Connected' : '✗ Disconnected' }}
                 </span>
               </p>
             </div>
-            <div class="list-group-item px-0" *ngIf="syncStatus.hasTenantId">
+
+            <div class="list-group-item px-0" *ngIf="syncStatus?.hasTenantId">
               <small class="text-muted">Tenant ID</small>
-              <p class="mb-0 fw-bold text-truncate">Available</p>
+              <p class="mb-0 fw-bold">
+                <i class="bi bi-check-circle text-success"></i> Available
+              </p>
             </div>
-            <div class="list-group-item px-0" *ngIf="syncStatus.tokenExpiry">
+
+            <div class="list-group-item px-0" *ngIf="syncStatus?.tokenExpiry">
               <small class="text-muted">Token Expiry</small>
-              <p class="mb-0 fw-bold">{{ syncStatus.tokenExpiry | date:'medium' }}</p>
+              <p class="mb-0 fw-bold">
+                {{ syncStatus?.tokenExpiry | date:'medium' }}
+              </p>
             </div>
+
+            <div class="list-group-item px-0" *ngIf="!syncStatus?.connected">
+              <small class="text-muted">Next Step</small>
+              <p class="mb-0 fw-bold text-primary">
+                <i class="bi bi-arrow-right-circle"></i> Connect your account
+              </p>
+            </div>
+
           </div>
-          <div *ngIf="!syncStatus" class="text-center text-muted py-4">
-            <p>No connection information available</p>
-          </div>
+
+          <ng-template #noStatus>
+            <div class="text-center text-muted py-4">
+              <i class="bi bi-info-circle fs-1"></i>
+              <p class="mt-2">No connection information available</p>
+            </div>
+          </ng-template>
+
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Info Card -->
   <div class="row mt-4">
     <div class="col-12">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-bottom">
-          <h5 class="mb-0">About Xero Integration</h5>
+          <h5 class="mb-0">
+            <i class="bi bi-info-circle"></i> About Xero Integration
+          </h5>
         </div>
         <div class="card-body">
           <p>This platform securely integrates with Xero to sync your financial data including:</p>
           <ul>
-            <li>Invoices and payments</li>
-            <li>Bank accounts and transactions</li>
-            <li>Chart of accounts</li>
+            <li><i class="bi bi-check text-success"></i> Invoices and payments</li>
+            <li><i class="bi bi-check text-success"></i> Bank accounts and transactions</li>
+            <li><i class="bi bi-check text-success"></i> Chart of accounts</li>
           </ul>
           <p class="text-muted small mb-0">
-            Your Xero authorization is stored securely and only used to sync your financial data.
+            <i class="bi bi-shield-lock"></i> Your Xero authorization is stored securely and only used to sync your financial data.
           </p>
         </div>
       </div>

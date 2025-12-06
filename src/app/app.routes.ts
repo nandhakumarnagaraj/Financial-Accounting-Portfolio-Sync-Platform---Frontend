@@ -1,59 +1,46 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
+import { Routes } from ' @angular/router';
 import { NoAuthGuard } from './guards/no-auth.guard';
-import { LoginComponent } from './components/login/login';
-import { SignupComponent } from './components/signup/signup';
-import { DashboardComponent } from './components/dashboard/dashboard';
-import { AuthGuard } from './guards/auth-guard';
-import { XeroComponent } from './components/xero/xero';
-import { SyncConsoleComponent } from './components/sync-console/sync-console';
-import { InvoicesComponent } from './components/invoices/invoices';
+import { authGuard } from './guards/auth.guard';
+import { xeroGuard } from './guards/xero.guard';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/dashboard',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () => import('./components/login/login').then(m => m.LoginComponent),
     canActivate: [NoAuthGuard]
   },
   {
     path: 'signup',
-    component: SignupComponent,
+    loadComponent: () => import('./components/signup/signup').then(m => m.SignupComponent),
     canActivate: [NoAuthGuard]
   },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'xero',
-    component: XeroComponent,
-    canActivate: [AuthGuard]
+    loadComponent: () => import('./components/xero/xero').then(m => m.XeroComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'sync',
-    component: SyncConsoleComponent,
-    canActivate: [AuthGuard]
+    loadComponent: () => import('./components/sync-console/sync-console').then(m => m.SyncConsoleComponent),
+    canActivate: [authGuard, xeroGuard]
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./components/dashboard/dashboard').then(m => m.DashboardComponent),
+    canActivate: [authGuard, xeroGuard]
   },
   {
     path: 'invoices',
-    component: InvoicesComponent,
-    canActivate: [AuthGuard]
+    loadComponent: () => import('./components/invoices/invoices').then(m => m.InvoicesComponent),
+    canActivate: [authGuard, xeroGuard]
   },
   {
     path: '**',
-    redirectTo: '/dashboard'
+    redirectTo: '/login'
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }

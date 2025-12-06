@@ -1,9 +1,35 @@
 <div class="container-fluid py-4">
   <div class="row mb-4">
     <div class="col-12">
-      <h1 class="h2">Sync Console</h1>
+      <h1 class="h2">🔄 Sync Console</h1>
       <p class="text-muted">Manually trigger synchronization of your Xero data</p>
+      
+      <!-- Add Breadcrumb -->
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/xero">Xero</a></li>
+          <li class="breadcrumb-item active">Sync Console</li>
+        </ol>
+      </nav>
     </div>
+  </div>
+
+  <!-- Add Success Message with Dashboard Link -->
+  <div *ngIf="allSynced && !error" class="alert alert-success alert-dismissible fade show" role="alert">
+    <h5 class="alert-heading">
+      <i class="bi bi-check-circle-fill"></i> All Data Synced Successfully!
+    </h5>
+    <p>Your Xero data has been synchronized. You can now view your dashboard.</p>
+    <hr>
+    <div class="d-flex gap-2">
+      <a routerLink="/dashboard" class="btn btn-success">
+        <i class="bi bi-speedometer2"></i> Go to Dashboard
+      </a>
+      <a routerLink="/invoices" class="btn btn-outline-success">
+        <i class="bi bi-file-earmark-text"></i> View Invoices
+      </a>
+    </div>
+    <button type="button" class="btn-close" (click)="allSynced = false"></button>
   </div>
 
   <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">

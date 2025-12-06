@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -9,8 +10,8 @@ import { LoginRequest, SignupRequest, JwtResponse, User, MessageResponse } from 
 })
 export class AuthService {
   
-  private apiUrl = 'http://localhost:8080/api/auth';
-  private userUrl = 'http://localhost:8080/api/users';
+  private apiUrl = `${environment.apiUrl}/auth`;
+  private userUrl = `${environment.apiUrl}/users`;
   
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromLocalStorage());
   public currentUser$ = this.currentUserSubject.asObservable();

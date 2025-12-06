@@ -1,24 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from ' @angular/core';
+import { CommonModule } from ' @angular/common';
 import { SyncStatusResponse, XeroAuthResponse } from '../../models/xero.model';
 import { XeroService } from '../../services/xero';
+import { FormsModule } from ' @angular/forms';
+import { Router, ActivatedRoute } from ' @angular/router';
 
-@Component({
+ @Component({
   selector: 'app-xero',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './xero.html',
   styleUrl: './xero.css',
 })
 export class XeroComponent implements OnInit {
+
   syncStatus: SyncStatusResponse | null = null;
   loading = false;
   disconnecting = false;
   error = '';
   success = '';
+  returnUrl = '';
 
-  constructor(private xeroService: XeroService) {}
+  constructor(
+    private xeroService: XeroService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    // Get return URL if provided
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/sync';
+
+    // Check for OAuth callback status
+    this.route.queryParams.subscribe(params => {
+      if (params['status'] === 'success') {
+        this.success = '✅ Xero connected successfully! Please sync your data.';
+        this.loadStatus();
+      } else if (params['status'] === 'error') {
+        this.error = '❌ ' + (params['message'] || 'Xero connection failed. Please try again.');
+      }
+    });
+
     this.loadStatus();
+
+    // Listen to live sync status updates
     this.xeroService.syncStatus$.subscribe(status => {
       this.syncStatus = status;
     });
@@ -31,8 +56,10 @@ export class XeroComponent implements OnInit {
   connectXero(): void {
     this.loading = true;
     this.error = '';
+
     this.xeroService.getAuthorizationUrl().subscribe({
       next: (response: XeroAuthResponse) => {
+        // Redirect to Xero authorization page
         window.location.href = response.authorizationUrl;
       },
       error: (err) => {
@@ -42,21 +69,33 @@ export class XeroComponent implements OnInit {
     });
   }
 
+  goToSync(): void {
+    this.router.navigate(['/sync']);
+  }
+
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
   disconnectXero(): void {
-    if (!confirm('Are you sure you want to disconnect Xero? You will need to authorize again to sync data.')) {
-      return;
-    }
+    if (!confirm('Are you sure you want to disconnect Xero? This will log you out.')) return;
 
     this.disconnecting = true;
     this.error = '';
+
     this.xeroService.disconnectXero().subscribe({
       next: () => {
         this.success = 'Xero account disconnected successfully';
         this.syncStatus = null;
-        setTimeout(() => this.success = '', 3000);
-        this.disconnecting = false;
+
+        // Logout after disconnecting Xero
+        setTimeout(() => {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('current_user');
+          this.router.navigate(['/login']);
+        }, 2000);
       },
-      error: (err) => {
+      error: () => {
         this.error = 'Failed to disconnect Xero account';
         this.disconnecting = false;
       }
@@ -66,14 +105,15 @@ export class XeroComponent implements OnInit {
   refreshToken(): void {
     this.loading = true;
     this.error = '';
+
     this.xeroService.refreshToken().subscribe({
       next: () => {
         this.success = 'Token refreshed successfully';
         this.loadStatus();
-        setTimeout(() => this.success = '', 3000);
+        setTimeout(() => (this.success = ''), 3000);
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         this.error = 'Failed to refresh token';
         this.loading = false;
       }
