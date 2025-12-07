@@ -1,80 +1,97 @@
 <div class="sync-container">
   <h1>Sync Financial Data</h1>
 
-  <!-- Sync Card 1: Invoices -->
-  <mat-card class="sync-card">
-    <mat-card-header>
-      <mat-icon>receipt</mat-icon>
-      <mat-card-title>Sync Invoices</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Sync all invoices from your Xero account</p>
-      <p class="last-sync">Last synced: {{ lastSync.invoices ? (lastSync.invoices | date:'short') : 'Never' }}</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button 
-        mat-raised-button 
-        color="primary"
-        (click)="syncInvoices()"
-        [disabled]="isSyncing.invoices || isSyncingAll">
-        <mat-spinner *ngIf="isSyncing.invoices" diameter="20"></mat-spinner>
-        <span *ngIf="!isSyncing.invoices">Sync Invoices</span>
-      </button>
-    </mat-card-actions>
-  </mat-card>
+  <div class="sync-cards-grid">
+    <!-- Sync Card 1: Invoices -->
+    <mat-card class="sync-card">
+      <mat-card-header>
+        <mat-icon>receipt_long</mat-icon>
+        <mat-card-title>Invoices</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Synchronize all invoices from your Xero account to keep your financial records up-to-date.</p>
+        <p class="last-sync">{{ lastSync.invoices ? (lastSync.invoices | date:'medium') : 'Never synced' }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button 
+          mat-raised-button 
+          color="primary"
+          (click)="syncInvoices()"
+          [disabled]="isSyncing.invoices || isSyncingAll">
+          <mat-spinner *ngIf="isSyncing.invoices" diameter="20"></mat-spinner>
+          <span *ngIf="!isSyncing.invoices">
+            <mat-icon>sync</mat-icon>
+            Sync Invoices
+          </span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
 
-  <!-- Sync Card 2: Accounts -->
-  <mat-card class="sync-card">
-    <mat-card-header>
-      <mat-icon>account_balance</mat-icon>
-      <mat-card-title>Sync Accounts</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Sync all accounts from your Xero account</p>
-      <p class="last-sync">Last synced: {{ lastSync.accounts ? (lastSync.accounts | date:'short') : 'Never' }}</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button 
-        mat-raised-button 
-        color="primary"
-        (click)="syncAccounts()"
-        [disabled]="isSyncing.accounts || isSyncingAll">
-        <mat-spinner *ngIf="isSyncing.accounts" diameter="20"></mat-spinner>
-        <span *ngIf="!isSyncing.accounts">Sync Accounts</span>
-      </button>
-    </mat-card-actions>
-  </mat-card>
+    <!-- Sync Card 2: Accounts -->
+    <mat-card class="sync-card">
+      <mat-card-header>
+        <mat-icon>account_balance</mat-icon>
+        <mat-card-title>Accounts</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Synchronize all accounts from your Xero account to maintain accurate ledger information.</p>
+        <p class="last-sync">{{ lastSync.accounts ? (lastSync.accounts | date:'medium') : 'Never synced' }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button 
+          mat-raised-button 
+          color="primary"
+          (click)="syncAccounts()"
+          [disabled]="isSyncing.accounts || isSyncingAll">
+          <mat-spinner *ngIf="isSyncing.accounts" diameter="20"></mat-spinner>
+          <span *ngIf="!isSyncing.accounts">
+            <mat-icon>sync</mat-icon>
+            Sync Accounts
+          </span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
 
-  <!-- Sync Card 3: Transactions -->
-  <mat-card class="sync-card">
-    <mat-card-header>
-      <mat-icon>swap_horiz</mat-icon>
-      <mat-card-title>Sync Transactions</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Sync all transactions from your Xero account</p>
-      <p class="last-sync">Last synced: {{ lastSync.transactions ? (lastSync.transactions | date:'short') : 'Never' }}</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button 
-        mat-raised-button 
-        color="primary"
-        (click)="syncTransactions()"
-        [disabled]="isSyncing.transactions || isSyncingAll">
-        <mat-spinner *ngIf="isSyncing.transactions" diameter="20"></mat-spinner>
-        <span *ngIf="!isSyncing.transactions">Sync Transactions</span>
-      </button>
-    </mat-card-actions>
-  </mat-card>
+    <!-- Sync Card 3: Transactions -->
+    <mat-card class="sync-card">
+      <mat-card-header>
+        <mat-icon>swap_horiz</mat-icon>
+        <mat-card-title>Transactions</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Synchronize all transactions from your Xero account for comprehensive financial tracking.</p>
+        <p class="last-sync">{{ lastSync.transactions ? (lastSync.transactions | date:'medium') : 'Never synced' }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button 
+          mat-raised-button 
+          color="primary"
+          (click)="syncTransactions()"
+          [disabled]="isSyncing.transactions || isSyncingAll">
+          <mat-spinner *ngIf="isSyncing.transactions" diameter="20"></mat-spinner>
+          <span *ngIf="!isSyncing.transactions">
+            <mat-icon>sync</mat-icon>
+            Sync Transactions
+          </span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 
-  <!-- Sync All Button -->
-  <button 
-    mat-raised-button 
-    color="accent"
-    (click)="syncAll()"
-    [disabled]="isSyncingAll"
-    class="sync-all-btn">
-    <mat-spinner *ngIf="isSyncingAll" diameter="20"></mat-spinner>
-    <span *ngIf="!isSyncingAll">Sync All Data</span>
-  </button>
+  <!-- Sync All Section -->
+  <div class="sync-all-section">
+    <h2>Sync Everything at Once</h2>
+    <p>Perform a complete synchronization of all financial data from Xero in one operation.</p>
+    <button 
+      mat-raised-button 
+      class="sync-all-btn"
+      (click)="syncAll()"
+      [disabled]="isSyncingAll">
+      <mat-spinner *ngIf="isSyncingAll" diameter="24"></mat-spinner>
+      <span *ngIf="!isSyncingAll">
+        <mat-icon>cloud_sync</mat-icon>
+        Sync All Data
+      </span>
+    </button>
+  </div>
 </div>
