@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { filter, map } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +16,8 @@ import { MatBadgeModule } from '@angular/material/badge';
   imports: [
     CommonModule,
     RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
