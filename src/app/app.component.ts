@@ -5,7 +5,7 @@ import { AuthService } from './core/services/auth.service';
 import { filter, map } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
+
 
 
 
@@ -21,7 +21,7 @@ import { MatMenuModule } from '@angular/material/menu';
     RouterLinkActive,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule,
+
 
 
 
