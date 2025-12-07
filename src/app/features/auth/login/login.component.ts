@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-login',
@@ -20,8 +21,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatProgressSpinnerModule
-  ],
+    MatProgressSpinnerModule,
+    MatIcon
+],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -42,26 +44,32 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      return;
-    }
+hidePassword = true;
+authError: string | null = null;
 
-    this.isLoading = true;
-    const { username, password } = this.loginForm.value;
-
-    this.authService.login({ username, password }).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.authService.saveToken(response.token, this.loginForm.value.rememberMe);
-        this.authService.saveUser(response);
-        this.router.navigate(['/dashboard']);
-        this.toastr.success('Logged in successfully!', 'Success');
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.toastr.error(err.error.message || 'Login failed. Please try again.', 'Error');
-      }
-    });
+onSubmit(): void {
+  if (this.loginForm.invalid || this.isLoading) {
+    return;
   }
+
+  this.isLoading = true;
+  this.authError = null;
+
+  // your existing login call...
+  this.authService.login(this.loginForm.value).subscribe({
+    next: () => {
+      this.isLoading = false;
+      // navigate...
+    },
+    error: (err) => {
+      this.isLoading = false;
+      this.authError = err?.error?.message || 'Login failed. Please try again.';
+    },
+  });
+}
+
+onForgotPassword(): void {
+  // navigate or open dialog
+}
+
 }
