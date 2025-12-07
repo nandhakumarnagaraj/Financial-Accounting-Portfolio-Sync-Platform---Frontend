@@ -1,0 +1,90 @@
+<!-- Before Login - Landing Page -->
+<div *ngIf="!isLoggedIn" class="auth-wrapper">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- After Login - Main Dashboard Layout -->
+<div *ngIf="isLoggedIn" class="app-layout">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <mat-icon class="brand-icon">account_balance</mat-icon>
+      <h2 class="brand-name">FinSync</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+        <div class="active-indicator"></div>
+      </a>
+
+      <a routerLink="/xero-connection" routerLinkActive="active" class="nav-item">
+        <mat-icon>cloud</mat-icon>
+        <span>Xero Connection</span>
+        <div class="active-indicator"></div>
+      </a>
+
+      <a routerLink="/sync-data" routerLinkActive="active" class="nav-item">
+        <mat-icon>sync</mat-icon>
+        <span>Sync Data</span>
+        <div class="active-indicator"></div>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="avatar">{{username[0]}}</div>
+        <div class="user-info">
+          <p class="username">{{username}}</p>
+          <p class="role">{{userRole}}</p>
+        </div>
+      </div>
+      <button mat-icon-button (click)="logout()" class="logout-btn">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="page-title">
+        <h1>{{currentPageTitle}}</h1>
+        <p class="breadcrumb">Home / {{currentPageTitle}}</p>
+      </div>
+
+      <div class="top-bar-actions">
+        <!-- Search Bar -->
+        <mat-form-field class="search-field" appearance="outline">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput placeholder="Search...">
+        </mat-form-field>
+
+        <!-- Notification Bell -->
+        <button mat-icon-button [matMenuTriggerFor]="notificationMenu">
+          <mat-icon matBadge="3" matBadgeColor="warn">notifications</mat-icon>
+        </button>
+        <mat-menu #notificationMenu="matMenu">
+          <button mat-menu-item>Notification 1</button>
+          <button mat-menu-item>Notification 2</button>
+        </mat-menu>
+
+        <!-- User Menu -->
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+          <div class="avatar-small">{{username[0]}}</div>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item>Profile</button>
+          <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
+      </div>
+    </header>
+
+    <!-- Page Content (Router Outlet) -->
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

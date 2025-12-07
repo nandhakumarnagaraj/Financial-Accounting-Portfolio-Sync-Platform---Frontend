@@ -1,9 +1,10 @@
-import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
-import { LoginRequest, SignupRequest, JwtResponse, User, MessageResponse } from '../models/auth.model';
+import { environment } from '../environments/environment';
+import { User } from '../core/models/user.model';
+import { JwtResponse, LoginRequest, MessageResponse, SignupRequest } from '../core/models/auth.model';
 
 @Injectable({
   providedIn: 'root'

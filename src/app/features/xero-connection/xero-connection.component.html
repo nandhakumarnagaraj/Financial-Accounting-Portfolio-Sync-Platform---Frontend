@@ -1,0 +1,93 @@
+<div class="xero-connection-container">
+  <!-- Connection Status Card -->
+  <div class="connection-status-card" [ngClass]="xeroConnected ? 'connected' : 'disconnected'">
+    <div class="status-animation">
+      <!-- Animated Icon -->
+      <div class="icon-wrapper animated-pulse">
+        <mat-icon *ngIf="!xeroConnected" class="status-icon">cloud_off</mat-icon>
+        <mat-icon *ngIf="xeroConnected" class="status-icon">cloud_done</mat-icon>
+      </div>
+
+      <!-- Animated Circles -->
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+    </div>
+
+    <h1 class="status-title">
+      {{ xeroConnected ? 'Xero Connected' : 'Connect to Xero' }}
+    </h1>
+
+    <p class="status-description">
+      {{ xeroConnected
+        ? 'Your Xero account is successfully connected and syncing'
+        : 'Connect your Xero account to start syncing financial data'
+      }}
+    </p>
+
+    <!-- Connected View -->
+    <div *ngIf="xeroConnected" class="connection-details-section">
+      <div class="detail-item">
+        <mat-icon>info</mat-icon>
+        <span>Tenant ID: <strong>{{ tenantId }}</strong></span>
+      </div>
+      <div class="detail-item">
+        <mat-icon>schedule</mat-icon>
+        <span>Last Sync: <strong>{{ lastSyncTime | date:'medium' }}</strong></span>
+      </div>
+
+      <div class="connection-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          class="refresh-btn"
+          (click)="refreshToken()">
+          <mat-icon>refresh</mat-icon>
+          Refresh Token
+        </button>
+        <button
+          mat-stroked-button
+          color="warn"
+          class="disconnect-btn"
+          (click)="disconnectXero()">
+          <mat-icon>link_off</mat-icon>
+          Disconnect Xero
+        </button>
+      </div>
+    </div>
+
+    <!-- NOT Connected View -->
+    <div *ngIf="!xeroConnected" class="connection-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        class="connect-btn"
+        (click)="connectXero()">
+        <mat-icon>link</mat-icon>
+        Connect to Xero
+      </button>
+
+      <div class="connection-features">
+        <div class="feature">
+          <mat-icon>check_circle</mat-icon>
+          <span>Secure OAuth 2.0 authentication</span>
+        </div>
+        <div class="feature">
+          <mat-icon>sync</mat-icon>
+          <span>Automatic data synchronization</span>
+        </div>
+        <div class="feature">
+          <mat-icon>lock</mat-icon>
+          <span>Data encryption and privacy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-spinner">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading connection status...</p>
+  </div>
+</ng-template>

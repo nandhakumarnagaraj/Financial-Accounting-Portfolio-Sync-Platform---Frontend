@@ -1,0 +1,169 @@
+<div class="dashboard-container">
+  <!-- Stats Cards Grid -->
+  <div class="stats-grid">
+    <!-- Card 1: Total Invoices -->
+    <div class="stat-card card-blue animated-fade-in-up">
+      <div class="stat-icon">
+        <mat-icon>receipt_long</mat-icon>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Total Invoices</p>
+        <h2 class="stat-value">{{dashboardStats?.totalInvoices}}</h2>
+        <div class="stat-trend positive">
+          <mat-icon>trending_up</mat-icon>
+          <span>+12.5% from last month</span>
+        </div>
+      </div>
+      <div class="card-decoration"></div>
+    </div>
+
+    <!-- Card 2: Total Accounts -->
+    <div class="stat-card card-green animated-fade-in-up" style="animation-delay: 0.1s;">
+      <div class="stat-icon">
+        <mat-icon>account_balance</mat-icon>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Total Accounts</p>
+        <h2 class="stat-value">{{dashboardStats?.totalAccounts}}</h2>
+        <div class="stat-trend positive">
+          <mat-icon>trending_up</mat-icon>
+          <span>+8.3% from last month</span>
+        </div>
+      </div>
+      <div class="card-decoration"></div>
+    </div>
+
+    <!-- Card 3: Total Transactions -->
+    <div class="stat-card card-purple animated-fade-in-up" style="animation-delay: 0.2s;">
+      <div class="stat-icon">
+        <mat-icon>swap_horiz</mat-icon>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Total Transactions</p>
+        <h2 class="stat-value">{{dashboardStats?.totalTransactions}}</h2>
+        <div class="stat-trend positive">
+          <mat-icon>trending_up</mat-icon>
+          <span>+15.7% from last month</span>
+        </div>
+      </div>
+      <div class="card-decoration"></div>
+    </div>
+
+    <!-- Card 4: Total Revenue -->
+    <div class="stat-card card-gradient animated-fade-in-up" style="animation-delay: 0.3s;">
+      <div class="stat-icon">
+        <mat-icon>payments</mat-icon>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Total Revenue</p>
+        <h2 class="stat-value">{{dashboardStats?.totalInvoiceAmount | currency}}</h2>
+        <div class="stat-trend positive">
+          <mat-icon>trending_up</mat-icon>
+          <span>+23.1% from last month</span>
+        </div>
+      </div>
+      <div class="card-decoration"></div>
+    </div>
+  </div>
+
+  <!-- Charts Section - Beautiful Visualizations -->
+  <div class="charts-section">
+    <div class="charts-grid">
+      <!-- Chart 1: Monthly Revenue -->
+      <mat-card class="chart-card animated-fade-in">
+        <mat-card-header>
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Monthly Invoice Revenue</h3>
+              <p class="chart-subtitle">Last 12 months performance</p>
+            </div>
+            <button mat-icon-button [matMenuTriggerFor]="chartMenu1">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #chartMenu1="matMenu">
+              <button mat-menu-item>View Details</button>
+              <button mat-menu-item>Download Report</button>
+            </mat-menu>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="chart-stats">
+            <div class="chart-stat">
+              <span class="label">Total Revenue</span>
+              <span class="value">$125,450</span>
+            </div>
+            <div class="chart-stat">
+              <span class="label">Growth</span>
+              <span class="value success">+18.2%</span>
+            </div>
+          </div>
+
+          <canvas
+            baseChart
+            [data]="revenueChartData"
+            [options]="revenueChartOptions"
+            [type]="'bar'"
+            class="chart-canvas">
+          </canvas>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Chart 2: Expense vs Income -->
+      <mat-card class="chart-card animated-fade-in" style="animation-delay: 0.1s;">
+        <mat-card-header>
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Income vs Expenses</h3>
+              <p class="chart-subtitle">Current month breakdown</p>
+            </div>
+            <button mat-icon-button [matMenuTriggerFor]="chartMenu2">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #chartMenu2="matMenu">
+              <button mat-menu-item>View Details</button>
+              <button mat-menu-item>Download Report</button>
+            </mat-menu>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="doughnut-wrapper">
+            <canvas
+              baseChart
+              [data]="expenseIncomeChartData"
+              [options]="expenseIncomeChartOptions"
+              [type]="'doughnut'"
+              class="chart-canvas-doughnut">
+            </canvas>
+
+            <div class="chart-center-label">
+              <p class="center-value">$98,750</p>
+              <p class="center-label">Net Income</p>
+            </div>
+          </div>
+
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color" [style.background]="'#10B981'"></span>
+              <span class="legend-label">Income</span>
+              <span class="legend-value">$125,000</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color" [style.background]="'#EF4444'"></span>
+              <span class="legend-label">Expenses</span>
+              <span class="legend-value">$26,250</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-spinner">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading dashboard...</p>
+  </div>
+</ng-template>

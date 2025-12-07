@@ -1,0 +1,44 @@
+
+@use "bootstrap/scss/bootstrap.scss";
+@use "./app/shared/styles/_animations.scss";
+@use "variables" as *;
+
+// Gradients
+$gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-success: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+$gradient-dashboard: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Open Sans', sans-serif;
+  background-color: $gray-50;
+  color: $gray-700;
+}
+
+html, body {
+  height: 100%;
+}
+
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Toastr Customizations */
+.toast-success {
+  background-color: $secondary !important;
+}
+
+.toast-error {
+  background-color: $danger !important;
+}
+
+.toast-info {
+  background-color: $primary-light !important;
+}
+
+.toast-warning {
+  background-color: $warning !important;
+}

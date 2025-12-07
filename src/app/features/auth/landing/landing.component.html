@@ -1,0 +1,64 @@
+<div class="auth-container">
+  <!-- Animated Background Particles -->
+  <div class="particle-background">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="login-section" *ngIf="isLoginView">
+    <mat-card class="auth-card glass-effect">
+      <mat-card-header>
+        <div class="logo-container">
+          <mat-icon class="logo-icon">account_balance</mat-icon>
+          <h1 class="logo-text">FinSync</h1>
+        </div>
+        <p class="subtitle">Welcome back! Login to continue</p>
+      </mat-card-header>
+      <mat-card-content>
+        <app-login></app-login>
+      </mat-card-content>
+      <mat-card-footer>
+        <div class="toggle-link">
+          <a href="javascript:void(0)" (click)="toggleView()">
+            Need an account? Sign Up
+          </a>
+        </div>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+
+  <div class="signup-section" *ngIf="!isLoginView">
+    <mat-card class="auth-card glass-effect">
+      <mat-card-header>
+        <div class="logo-container">
+          <mat-icon class="logo-icon">person_add</mat-icon>
+          <h1 class="logo-text">Join FinSync</h1>
+        </div>
+        <p class="subtitle">Create your account to get started</p>
+      </mat-card-header>
+      <mat-card-content>
+        <app-signup></app-signup>
+      </mat-card-content>
+      <mat-card-footer>
+        <div class="toggle-link">
+          <a href="javascript:void(0)" (click)="toggleView()">
+            Have an account? Login
+          </a>
+        </div>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>

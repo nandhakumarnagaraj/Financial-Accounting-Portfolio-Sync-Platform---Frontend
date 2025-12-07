@@ -1,0 +1,118 @@
+@import "variables";
+
+/* Modern Split Screen Design */
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+
+  // Left Side - Login
+  .login-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 60px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  }
+
+  // Right Side - Signup
+  .signup-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 60px;
+  }
+
+  // Mobile: Stack vertically
+  @media (max-width: 768px) {
+    flex-direction: column;
+    .login-section, .signup-section {
+      padding: 30px;
+    }
+  }
+}
+
+// Glassmorphism Card (Moved from global as it's specific to auth)
+.glass-effect {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+}
+
+// Floating Label Animation (Moved from global as it's specific to auth forms)
+.form-field {
+  position: relative;
+  margin-bottom: 30px;
+
+  input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid $gray-200;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.1);
+      outline: none;
+    }
+
+    &:focus + label,
+    &:not(:placeholder-shown) + label {
+      transform: translateY(-30px) scale(0.9);
+      color: $primary;
+    }
+  }
+
+  label {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    color: $gray-500;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+}
+
+// Particle Background (for landing page)
+.particle-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: particle-anim 20s infinite ease-in-out;
+}
+.particle:nth-child(1) { width: 30px; height: 30px; left: 10%; animation-delay: 0s; }
+.particle:nth-child(2) { width: 40px; height: 40px; left: 20%; animation-delay: 2s; }
+.particle:nth-child(3) { width: 25px; height: 25px; left: 25%; animation-delay: 4s; }
+.particle:nth-child(4) { width: 35px; height: 35px; left: 40%; animation-delay: 6s; }
+.particle:nth-child(5) { width: 50px; height: 50px; left: 50%; animation-delay: 8s; }
+.particle:nth-child(6) { width: 20px; height: 20px; left: 65%; animation-delay: 10s; }
+.particle:nth-child(7) { width: 45px; height: 45px; left: 70%; animation-delay: 12s; }
+.particle:nth-child(8) { width: 30px; height: 30px; left: 80%; animation-delay: 14s; }
+.particle:nth-child(9) { width: 25px; height: 25px; left: 90%; animation-delay: 16s; }
+.particle:nth-child(10) { width: 30px; height: 30px; left: 15%; animation-delay: 18s; }
+.particle:nth-child(11) { width: 40px; height: 40px; left: 35%; animation-delay: 20s; }
+.particle:nth-child(12) { width: 25px; height: 25px; left: 55%; animation-delay: 22s; }
+.particle:nth-child(13) { width: 35px; height: 35px; left: 75%; animation-delay: 24s; }
+.particle:nth-child(14) { width: 50px; height: 50px; left: 85%; animation-delay: 26s; }
+.particle:nth-child(15) { width: 20px; height: 20px; left: 5%; animation-delay: 28s; }
