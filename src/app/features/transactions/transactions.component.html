@@ -1,63 +1,200 @@
-<mat-card class="transactions-card">
-  <mat-toolbar>
-    <span>Transactions</span>
-    <span class="toolbar-spacer"></span>
-    <mat-form-field appearance="outline" class="filter-input">
-      <mat-label>Filter</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Payee" #input>
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-  </mat-toolbar>
-
-  <div *ngIf="isLoading" class="loading-spinner">
-    <mat-spinner></mat-spinner>
-    <p>Loading transactions...</p>
+<div class="transactions-container">
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="icon-wrapper">
+          <mat-icon>swap_horiz</mat-icon>
+        </div>
+        <div class="header-text">
+          <h1>Transactions</h1>
+          <p>View and manage all your transactions</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search transactions</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Description, amount..." #input>
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+        <button mat-raised-button color="primary" class="add-button">
+          <mat-icon>add</mat-icon>
+          New Transaction
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div *ngIf="error" class="error-message">
-    <mat-icon color="warn">error_outline</mat-icon>
-    <span>{{ error }}</span>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon teal">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </div>
+      <div class="stat-info">
+        <p class="stat-label">Total Transactions</p>
+        <h3 class="stat-value">{{ dataSource.data.length }}</h3>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+      <div class="stat-info">
+        <p class="stat-label">Total Income</p>
+        <h3 class="stat-value">{{ getTotalIncome() | currency:'USD':'symbol':'1.0-0' }}</h3>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">
+        <mat-icon>trending_down</mat-icon>
+      </div>
+      <div class="stat-info">
+        <p class="stat-label">Total Expenses</p>
+        <h3 class="stat-value">{{ getTotalExpenses() | currency:'USD':'symbol':'1.0-0' }}</h3>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <mat-icon>account_balance</mat-icon>
+      </div>
+      <div class="stat-info">
+        <p class="stat-label">Net Balance</p>
+        <h3 class="stat-value" [class.positive]="getNetBalance() >= 0" [class.negative]="getNetBalance() < 0">
+          {{ getNetBalance() | currency:'USD':'symbol':'1.0-0' }}
+        </h3>
+      </div>
+    </div>
   </div>
 
-  <div class="table-container" [class.hidden]="isLoading || error">
-    <table mat-table [dataSource]="dataSource" matSort>
-      <!-- Date Column -->
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-        <td mat-cell *matCellDef="let transaction"> {{ transaction.date | date }} </td>
-      </ng-container>
+  <mat-card class="table-card">
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner-wrapper">
+        <mat-spinner diameter="60"></mat-spinner>
+        <p>Loading transactions...</p>
+      </div>
+    </div>
 
-      <!-- Description Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
-        <td mat-cell *matCellDef="let transaction"> {{ transaction.description }} </td>
-      </ng-container>
+    <div *ngIf="error" class="error-state">
+      <mat-icon>error_outline</mat-icon>
+      <h3>Oops! Something went wrong</h3>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="loadTransactions()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
 
-      <!-- Amount Column -->
-      <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
-        <td mat-cell *matCellDef="let transaction"> {{ transaction.amount | currency:transaction.currency:'symbol':'1.2-2' }} </td>
-      </ng-container>
+    <div class="table-wrapper" [class.hidden]="isLoading || error">
+      <table mat-table [dataSource]="dataSource" matSort class="modern-table">
+        
+        <ng-container matColumnDef="bankTransactionID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="header-cell">
+              <mat-icon>tag</mat-icon>
+              Transaction ID
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let transaction">
+            <span class="transaction-id">{{ transaction.bankTransactionID }}</span>
+          </td>
+        </ng-container>
 
-      <!-- Currency Column -->
-      <ng-container matColumnDef="currency">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Currency </th>
-        <td mat-cell *matCellDef="let transaction"> {{ transaction.currency }} </td>
-      </ng-container>
+        <ng-container matColumnDef="contact">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="header-cell">
+              <mat-icon>person</mat-icon>
+              Contact
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let transaction">
+            <div class="contact-cell">
+              <div class="avatar">{{ transaction.contact?.name ? transaction.contact.name[0] : '?' }}</div>
+              <span>{{ transaction.contact?.name || 'N/A' }}</span>
+            </div>
+          </td>
+        </ng-container>
 
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-        <td mat-cell *matCellDef="let transaction"> {{ transaction.status }} </td>
-      </ng-container>
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="header-cell">
+              <mat-icon>calendar_today</mat-icon>
+              Date
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let transaction">
+            <div class="date-cell">
+              <span class="date-value">{{ transaction.date | date:'MMM d, y' }}</span>
+              <span class="time-value">{{ transaction.date | date:'shortTime' }}</span>
+            </div>
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="header-cell">
+              <mat-icon>payments</mat-icon>
+              Amount
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let transaction">
+            <span class="amount" [class.income]="isIncome(transaction)" [class.expense]="!isIncome(transaction)">
+              {{ isIncome(transaction) ? '+' : '-' }}{{ transaction.total | currency:'USD':'symbol':'1.2-2' }}
+            </span>
+          </td>
+        </ng-container>
 
-      <!-- Row shown when there is no matching data. -->
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="5">No data matching the filter "{{input.value}}"</td>
-      </tr>
-    </table>
-  </div>
-</mat-card>
+        <ng-container matColumnDef="isReconciled">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="header-cell">
+              <mat-icon>check_circle</mat-icon>
+              Reconciled
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let transaction">
+            <span class="status-badge" [ngClass]="transaction.isReconciled ? 'status-completed' : 'status-pending'">
+              {{ transaction.isReconciled ? 'Yes' : 'No' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let transaction">
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="action-btn">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>visibility</mat-icon>
+                View Details
+              </button>
+              <button mat-menu-item>
+                <mat-icon>edit</mat-icon>
+                Edit
+              </button>
+              <button mat-menu-item>
+                <mat-icon>receipt</mat-icon>
+                Download Receipt
+              </button>
+              <button mat-menu-item class="delete-action">
+                <mat-icon>delete</mat-icon>
+                Delete
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+
+        <tr class="mat-row no-data-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6">
+            <div class="no-data">
+              <mat-icon>search_off</mat-icon>
+              <p>No transactions found matching "{{ input.value }}"</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </mat-card>
+</div>

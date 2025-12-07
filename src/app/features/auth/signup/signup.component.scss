@@ -1,111 +1,248 @@
 @use "variables" as *;
 
-.signup-container {
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(to right bottom, $primary-light, $accent-light); // More engaging background
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: rotate 30s linear infinite;
+  }
 }
 
 .auth-card {
   background: white;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); // Slightly stronger shadow for depth
-  max-width: 450px;
+  border-radius: 24px;
+  padding: 50px 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 480px;
   width: 100%;
   text-align: center;
-  transition: all 0.3s ease;
-  animation: fadeInScale 0.6s ease-out forwards; // Card entry animation
+  position: relative;
+  z-index: 1;
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
-  &:hover {
-    transform: translateY(-5px); // More pronounced hover effect
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); // Stronger hover shadow
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
   }
 
   .auth-title {
-    font-size: 32px; // Slightly larger title
-    font-weight: 700;
-    color: $gray-900;
-    margin-bottom: 10px;
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
   }
 
   .auth-subtitle {
-    font-size: 18px; // Slightly larger subtitle
+    font-size: 16px;
     color: $gray-600;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    font-weight: 500;
   }
 
   .form-field {
-    margin-bottom: 20px;
-
-    // Improved focus state for Material inputs
-    :host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
-      border-color: $primary !important;
-    }
+    margin-bottom: 24px;
+    text-align: left;
   }
 
   .primary-button {
-    background: linear-gradient(135deg, $primary-dark 0%, $primary 100%);
+    width: 100%;
+    height: 56px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 14px 24px; // Slightly larger padding for better touch target
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 600;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba($primary, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    position: relative;
+    overflow: hidden;
 
-    &:hover {
-      box-shadow: 0 6px 15px rgba($primary, 0.6);
-      transform: translateY(-2px);
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(102, 126, 234, 0.5);
+
+      &::before {
+        left: 100%;
+      }
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(-1px);
     }
 
     &:disabled {
       opacity: 0.7;
       cursor: not-allowed;
-      box-shadow: none;
       transform: none;
+    }
+
+    mat-spinner {
+      display: inline-block;
+      margin-right: 8px;
     }
   }
 
   .auth-footer {
-    margin-top: 25px;
-    font-size: 15px; // Slightly larger footer text
-    color: $gray-700;
+    margin-top: 30px;
+    font-size: 15px;
+    color: $gray-600;
 
     a {
       color: $primary;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
+      position: relative;
+      transition: color 0.3s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: $primary;
+        transition: width 0.3s ease;
+      }
 
       &:hover {
-        text-decoration: underline;
+        color: $primary-dark;
+
+        &::after {
+          width: 100%;
+        }
       }
     }
   }
 }
 
-// Adjust mat-form-field to align with custom form-field floating labels
-:host ::ng-deep .mat-mdc-form-field-wrapper {
-  padding-bottom: 0;
+:host ::ng-deep {
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    background: $gray-50;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: $gray-100;
+    }
+  }
+
+  .mat-mdc-form-field.mat-focused {
+    .mat-mdc-text-field-wrapper {
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .mdc-notched-outline {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: $primary !important;
+        border-width: 2px !important;
+      }
+    }
+  }
+
+  .mat-mdc-form-field-icon-suffix {
+    color: $gray-500;
+  }
+
+  .mat-mdc-checkbox {
+    margin-bottom: 20px;
+
+    .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+      background-color: $primary !important;
+      border-color: $primary !important;
+    }
+
+    .mdc-label {
+      color: $gray-700;
+      font-weight: 500;
+    }
+  }
 }
 
-:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-  display: none;
-}
-
-// Keyframe animation for card entry
-@keyframes fadeInScale {
+@keyframes slideInUp {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-card {
+    padding: 40px 30px;
+
+    .auth-title {
+      font-size: 28px;
+    }
   }
 }

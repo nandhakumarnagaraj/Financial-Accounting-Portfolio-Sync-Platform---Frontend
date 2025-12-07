@@ -20,6 +20,7 @@ export interface XeroAccount {
 }
 
 export interface XeroTransaction {
+  amount: number;
   // Define properties based on your Xero API response
   bankTransactionID: string;
   contact: { name: string };
