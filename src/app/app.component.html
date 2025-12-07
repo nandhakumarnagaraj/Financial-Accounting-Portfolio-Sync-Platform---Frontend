@@ -30,6 +30,16 @@
         <span>Sync Data</span>
         <div class="active-indicator"></div>
       </a>
+      <a routerLink="/invoices" routerLinkActive="active" class="nav-item">
+        <mat-icon>receipt_long</mat-icon>
+        <span>Invoices</span>
+        <div class="active-indicator"></div>
+      </a>
+      <a routerLink="/transactions" routerLinkActive="active" class="nav-item">
+        <mat-icon>swap_horiz</mat-icon>
+        <span>Transactions</span>
+        <div class="active-indicator"></div>
+      </a>
     </nav>
 
     <div class="sidebar-footer">
@@ -56,20 +66,17 @@
       </div>
 
       <div class="top-bar-actions">
+
+
+
+
         <!-- Search Bar -->
         <mat-form-field class="search-field" appearance="outline">
           <mat-icon matPrefix>search</mat-icon>
           <input matInput placeholder="Search...">
         </mat-form-field>
 
-        <!-- Notification Bell -->
-        <button mat-icon-button [matMenuTriggerFor]="notificationMenu">
-          <mat-icon matBadge="3" matBadgeColor="warn">notifications</mat-icon>
-        </button>
-        <mat-menu #notificationMenu="matMenu">
-          <button mat-menu-item>Notification 1</button>
-          <button mat-menu-item>Notification 2</button>
-        </mat-menu>
+
 
         <!-- User Menu -->
         <button mat-icon-button [matMenuTriggerFor]="userMenu">

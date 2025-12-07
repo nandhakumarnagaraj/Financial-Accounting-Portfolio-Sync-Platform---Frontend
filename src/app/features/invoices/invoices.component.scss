@@ -1,0 +1,52 @@
+.invoices-card {
+  margin: 20px;
+  padding: 0;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.filter-input {
+  width: 200px;
+  margin-right: 16px;
+}
+
+.loading-spinner, .error-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  min-height: 200px; /* Ensure spinner/error is visible */
+  flex-direction: column;
+  text-align: center;
+}
+
+.error-message mat-icon {
+  margin-bottom: 10px;
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+}
+
+.table-container {
+  overflow: auto;
+  max-height: calc(100vh - 250px); /* Adjust based on header/footer size */
+}
+
+.table-container.hidden {
+  display: none;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header {
+  white-space: nowrap;
+}
+
+.mat-column-total,
+.mat-column-amountDue {
+  text-align: right;
+}

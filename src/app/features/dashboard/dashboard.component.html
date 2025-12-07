@@ -50,7 +50,7 @@
     </div>
 
     <!-- Card 4: Total Revenue -->
-    <div class="stat-card card-gradient animated-fade-in-up" style="animation-delay: 0.3s;">
+    <!-- <div class="stat-card card-gradient animated-fade-in-up" style="animation-delay: 0.3s;">
       <div class="stat-icon">
         <mat-icon>payments</mat-icon>
       </div>
@@ -63,7 +63,7 @@
         </div>
       </div>
       <div class="card-decoration"></div>
-    </div>
+    </div> -->
   </div>
 
   <!-- Charts Section - Beautiful Visualizations -->
@@ -77,13 +77,6 @@
               <h3 class="chart-title">Monthly Invoice Revenue</h3>
               <p class="chart-subtitle">Last 12 months performance</p>
             </div>
-            <button mat-icon-button [matMenuTriggerFor]="chartMenu1">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #chartMenu1="matMenu">
-              <button mat-menu-item>View Details</button>
-              <button mat-menu-item>Download Report</button>
-            </mat-menu>
           </div>
         </mat-card-header>
 
@@ -91,7 +84,7 @@
           <div class="chart-stats">
             <div class="chart-stat">
               <span class="label">Total Revenue</span>
-              <span class="value">$125,450</span>
+              <span class="value">₹125,450</span>
             </div>
             <div class="chart-stat">
               <span class="label">Growth</span>
@@ -117,13 +110,6 @@
               <h3 class="chart-title">Income vs Expenses</h3>
               <p class="chart-subtitle">Current month breakdown</p>
             </div>
-            <button mat-icon-button [matMenuTriggerFor]="chartMenu2">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #chartMenu2="matMenu">
-              <button mat-menu-item>View Details</button>
-              <button mat-menu-item>Download Report</button>
-            </mat-menu>
           </div>
         </mat-card-header>
 
@@ -138,7 +124,7 @@
             </canvas>
 
             <div class="chart-center-label">
-              <p class="center-value">$98,750</p>
+              <p class="center-value">₹98,750</p>
               <p class="center-label">Net Income</p>
             </div>
           </div>
@@ -147,12 +133,12 @@
             <div class="legend-item">
               <span class="legend-color" [style.background]="'#10B981'"></span>
               <span class="legend-label">Income</span>
-              <span class="legend-value">$125,000</span>
+              <span class="legend-value">₹125,000</span>
             </div>
             <div class="legend-item">
               <span class="legend-color" [style.background]="'#EF4444'"></span>
               <span class="legend-label">Expenses</span>
-              <span class="legend-value">$26,250</span>
+              <span class="legend-value">₹26,250</span>
             </div>
           </div>
         </mat-card-content>

@@ -8,7 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatBadgeModule } from '@angular/material/badge';
+
+
 
 @Component({
   selector: 'app-root',
@@ -21,9 +22,10 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
+
     MatFormFieldModule,
     MatInputModule,
-    MatBadgeModule
+
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss' // Will change to .scss

@@ -23,5 +23,15 @@ export const routes: Routes = [
     loadComponent: () => import('./features/sync-data/sync-data.component').then(m => m.SyncDataComponent),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'invoices',
+    loadComponent: () => import('./features/invoices/invoices.component').then(m => m.InvoicesComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'transactions',
+    loadComponent: () => import('./features/transactions/transactions.component').then(m => m.TransactionsComponent),
+    canActivate: [AuthGuard]
+  },
   { path: '**', redirectTo: '' }
 ];
