@@ -23,13 +23,15 @@ import { MatIcon } from "@angular/material/icon";
     MatCheckboxModule,
     MatProgressSpinnerModule,
     MatIcon
-],
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
+  hidePassword = true;
+  authError: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -44,32 +46,35 @@ export class LoginComponent {
     });
   }
 
-hidePassword = true;
-authError: string | null = null;
+  onSubmit(): void {
+    if (this.loginForm.invalid || this.isLoading) {
+      Object.keys(this.loginForm.controls).forEach(key => {
+        this.loginForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
 
-onSubmit(): void {
-  if (this.loginForm.invalid || this.isLoading) {
-    return;
+    this.isLoading = true;
+    this.authError = null;
+
+    const { username, password, rememberMe } = this.loginForm.value;
+
+    this.authService.login({ username, password }).subscribe({
+      next: (response) => {
+        this.authService.saveToken(response.token, rememberMe);
+        this.authService.saveUser(response);
+        this.toastr.success('Welcome back!', 'Login Successful');
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.authError = err?.error?.message || 'Login failed. Please check your credentials.';
+        this.toastr.error('Login Failed');
+      },
+    });
   }
 
-  this.isLoading = true;
-  this.authError = null;
-
-  // your existing login call...
-  this.authService.login(this.loginForm.value).subscribe({
-    next: () => {
-      this.isLoading = false;
-      // navigate...
-    },
-    error: (err) => {
-      this.isLoading = false;
-      this.authError = err?.error?.message || 'Login failed. Please try again.';
-    },
-  });
-}
-
-onForgotPassword(): void {
-  // navigate or open dialog
-}
-
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
+  }
 }
