@@ -34,14 +34,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class TransactionsComponent implements OnInit {
   displayedColumns: string[] = [
-    'date',
-    'description',
+    'id',
+    'transactionType',
+    'contactName',
+    'transactionDate',
     'amount',
-    'currency',
+    'reference',
     'status',
-    'actions',
   ];
   dataSource = new MatTableDataSource<XeroTransaction>();
+  allTransactions: XeroTransaction[] = []; // Store all transactions for stats
   isLoading = true;
   error: string | null = null;
 
@@ -65,6 +67,7 @@ export class TransactionsComponent implements OnInit {
   loadTransactions(): void {
     this.xeroService.getTransactions().subscribe({
       next: (transactions) => {
+        this.allTransactions = transactions; // Assign to allTransactions
         this.dataSource.data = transactions;
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -112,13 +115,13 @@ export class TransactionsComponent implements OnInit {
   }
 
   getTotalIncome(): number {
-    return this.dataSource.data
+    return this.allTransactions
       .filter(t => this.isIncome(t))
       .reduce((sum, t) => sum + (t.amount || 0), 0);
   }
 
   getTotalExpenses(): number {
-    return this.dataSource.data
+    return this.allTransactions
       .filter(t => !this.isIncome(t))
       .reduce((sum, t) => sum + (t.amount || 0), 0);
   }

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { XeroInvoice, XeroAccount, XeroTransaction, SyncResponse, MessageResponse } from '../models/xero-data.models';
 import { SyncStatusResponse } from '../models/xero.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,12 @@ export class XeroService {
   }
 
   getInvoices(): Observable<XeroInvoice[]> {
-    return this.http.get<XeroInvoice[]>(`${this.apiUrl}/invoices`);
+    return this.http.get<any[]>(`${this.apiUrl}/invoices`).pipe(
+      map(invoices => invoices.map(invoice => ({
+        ...invoice,
+        invoiceID: invoice.id ? String(invoice.id) : ''
+      } as XeroInvoice)))
+    );
   }
 
   getAccounts(): Observable<XeroAccount[]> {

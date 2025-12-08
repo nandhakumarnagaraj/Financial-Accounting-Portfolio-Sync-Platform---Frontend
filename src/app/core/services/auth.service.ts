@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { LoginRequest, SignupRequest, JwtResponse, MessageResponse, User } from '../models/auth.model';
+import { LoginRequest, SignupRequest, JwtResponse, AuthMessageResponse, User } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,8 @@ export class AuthService {
     return this.http.post<JwtResponse>(`${this.apiUrl}/login`, credentials);
   }
 
-  signup(userData: SignupRequest): Observable<MessageResponse> {
-    return this.http.post<MessageResponse>(`${this.apiUrl}/signup`, userData);
+  signup(userData: SignupRequest): Observable<AuthMessageResponse> {
+    return this.http.post<AuthMessageResponse>(`${this.apiUrl}/signup`, userData);
   }
 
   logout(): void {

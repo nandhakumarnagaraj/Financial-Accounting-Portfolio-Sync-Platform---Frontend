@@ -16,10 +16,7 @@
           <input matInput (keyup)="applyFilter($event)" placeholder="Invoice number, contact..." #input>
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
-        <button mat-raised-button color="primary" class="add-button">
-          <mat-icon>add</mat-icon>
-          New Invoice
-        </button>
+
       </div>
     </div>
   </div>
@@ -31,7 +28,7 @@
       </div>
       <div class="stat-info">
         <p class="stat-label">Total Invoices</p>
-        <h3 class="stat-value">{{ dataSource.data.length }}</h3>
+        <h3 class="stat-value">{{ allInvoices.length }}</h3>
       </div>
     </div>
     <div class="stat-card">
@@ -58,7 +55,7 @@
       </div>
       <div class="stat-info">
         <p class="stat-label">Total Amount</p>
-        <h3 class="stat-value">{{ getTotalAmount() | currency:'USD':'symbol':'1.0-0' }}</h3>
+        <h3 class="stat-value">{{ getTotalAmount() | currency:'INR':'symbol':'1.0-0' }}</h3>
       </div>
     </div>
   </div>
@@ -84,10 +81,11 @@
     <div class="table-wrapper" [class.hidden]="isLoading || error">
       <table mat-table [dataSource]="dataSource" matSort class="modern-table">
         
+
+
         <ng-container matColumnDef="invoiceNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="header-cell">
-              <mat-icon>tag</mat-icon>
               Invoice #
             </div>
           </th>
@@ -99,7 +97,6 @@
         <ng-container matColumnDef="contactName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="header-cell">
-              <mat-icon>person</mat-icon>
               Contact
             </div>
           </th>
@@ -111,20 +108,11 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <div class="header-cell">
-              <mat-icon>calendar_today</mat-icon>
-              Date
-            </div>
-          </th>
-          <td mat-cell *matCellDef="let invoice">{{ invoice.date | date:'MMM d, y' }}</td>
-        </ng-container>
+
 
         <ng-container matColumnDef="dueDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="header-cell">
-              <mat-icon>event</mat-icon>
               Due Date
             </div>
           </th>
@@ -138,31 +126,28 @@
         <ng-container matColumnDef="total">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="header-cell">
-              <mat-icon>account_balance_wallet</mat-icon>
               Total
             </div>
           </th>
           <td mat-cell *matCellDef="let invoice">
-            <span class="amount-total">{{ invoice.total | currency:(invoice.currencyCode || 'USD'):'symbol':'1.2-2' }}</span>
+            <span class="amount-total">{{ invoice.total | currency:(invoice.currencyCode || 'INR'):'symbol':'1.2-2' }}</span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="amountDue">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="header-cell">
-              <mat-icon>payments</mat-icon>
               Amount Due
             </div>
           </th>
           <td mat-cell *matCellDef="let invoice">
-            <span class="amount-due">{{ invoice.amountDue | currency:(invoice.currencyCode || 'USD'):'symbol':'1.2-2' }}</span>
+            <span class="amount-due">{{ invoice.amountDue | currency:(invoice.currencyCode || 'INR'):'symbol':'1.2-2' }}</span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="header-cell">
-              <mat-icon>info</mat-icon>
               Status
             </div>
           </th>
@@ -173,38 +158,13 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let invoice">
-            <button mat-icon-button [matMenuTriggerFor]="menu" class="action-btn">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item>
-                <mat-icon>visibility</mat-icon>
-                View Details
-              </button>
-              <button mat-menu-item>
-                <mat-icon>edit</mat-icon>
-                Edit
-              </button>
-              <button mat-menu-item>
-                <mat-icon>download</mat-icon>
-                Download
-              </button>
-              <button mat-menu-item class="delete-action">
-                <mat-icon>delete</mat-icon>
-                Delete
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
+
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
 
         <tr class="mat-row no-data-row" *matNoDataRow>
-          <td class="mat-cell" colspan="8">
+          <td class="mat-cell" colspan="7">
             <div class="no-data">
               <mat-icon>search_off</mat-icon>
               <p>No invoices found matching "{{ input.value }}"</p>

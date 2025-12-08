@@ -37,6 +37,8 @@ export interface DashboardStatsResponse {
   totalInvoiceAmount: number;
   totalOutstandingAmount: number;
   xeroConnected: boolean;
+  tenantId: string | null;
+  lastSyncTime: string | null;
   username: string;
   invoices: Invoice[];
   accounts: Account[];

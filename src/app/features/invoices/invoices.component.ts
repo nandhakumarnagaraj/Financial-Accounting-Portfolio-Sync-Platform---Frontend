@@ -36,14 +36,13 @@ export class InvoicesComponent implements OnInit {
   displayedColumns: string[] = [
     'invoiceNumber',
     'contactName',
-    'date',
     'dueDate',
     'total',
     'amountDue',
     'status',
-    'actions',
   ];
   dataSource = new MatTableDataSource<XeroInvoice>();
+  allInvoices: XeroInvoice[] = []; // Store all invoices for stats
   isLoading = true;
   error: string | null = null;
 
@@ -67,6 +66,7 @@ export class InvoicesComponent implements OnInit {
   loadInvoices(): void {
     this.xeroService.getInvoices().subscribe({
       next: (invoices) => {
+        this.allInvoices = invoices; // Assign to allInvoices
         this.dataSource.data = invoices;
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -101,21 +101,20 @@ export class InvoicesComponent implements OnInit {
     return new Date(dueDate) < new Date();
   }
 
-  getPaidCount(): number {
-    return this.dataSource.data.filter(invoice => 
-      invoice.status.toLowerCase().includes('paid') || 
-      invoice.status.toLowerCase().includes('authorised')
-    ).length;
-  }
-
-  getPendingCount(): number {
-    return this.dataSource.data.filter(invoice => 
-      !invoice.status.toLowerCase().includes('paid') && 
-      !invoice.status.toLowerCase().includes('authorised')
-    ).length;
-  }
-
-  getTotalAmount(): number {
-    return this.dataSource.data.reduce((sum, invoice) => sum + (invoice.total || 0), 0);
-  }
-}
+    getPaidCount(): number {
+      return this.allInvoices.filter(invoice =>
+        invoice.status.toLowerCase().includes('paid') ||
+        invoice.status.toLowerCase().includes('authorised')
+      ).length;
+    }
+  
+    getPendingCount(): number {
+      return this.allInvoices.filter(invoice =>
+        !invoice.status.toLowerCase().includes('paid') &&
+        !invoice.status.toLowerCase().includes('authorised')
+      ).length;
+    }
+  
+    getTotalAmount(): number {
+      return this.allInvoices.reduce((sum, invoice) => sum + (invoice.total || 0), 0);
+    }}

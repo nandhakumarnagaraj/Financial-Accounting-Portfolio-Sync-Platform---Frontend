@@ -31,6 +31,6 @@ export interface User {
   updatedAt?: string;
 }
 
-export interface MessageResponse {
+export interface AuthMessageResponse {
   message: string;
 }

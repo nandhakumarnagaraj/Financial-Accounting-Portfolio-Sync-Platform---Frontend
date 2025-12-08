@@ -20,13 +20,14 @@ export interface XeroAccount {
 }
 
 export interface XeroTransaction {
-  amount: number;
-  // Define properties based on your Xero API response
-  bankTransactionID: string;
-  contact: { name: string };
-  date: string;
-  total: number;
-  isReconciled: boolean;
+  id: string; // Changed from bankTransactionID
+  transactionType: string;
+  contactName: string; // Changed from contact: { name: string }
+  transactionDate: string; // Changed from date
+  amount: number; // Changed from total, also matches sample data
+  isReconciled: boolean; // Keep for internal logic, even if not displayed
+  status: string; // Added from sample data
+  reference: string; // Added as per user request
 }
 
 export interface SyncResponse {
@@ -36,4 +37,5 @@ export interface SyncResponse {
 
 export interface MessageResponse {
     message: string;
+    lastSyncTime?: string;
 }

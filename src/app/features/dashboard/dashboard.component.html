@@ -56,7 +56,7 @@
       </div>
       <div class="stat-content">
         <p class="stat-label">Total Revenue</p>
-        <h2 class="stat-value">{{dashboardStats?.totalInvoiceAmount | currency}}</h2>
+        <h2 class="stat-value">{{dashboardStats?.totalInvoiceAmount | currency:'INR'}}</h2>
         <div class="stat-trend positive">
           <mat-icon>trending_up</mat-icon>
           <span>+23.1% from last month</span>
@@ -84,11 +84,11 @@
           <div class="chart-stats">
             <div class="chart-stat">
               <span class="label">Total Revenue</span>
-              <span class="value">₹125,450</span>
+              <span class="value">{{totalMonthlyRevenue | currency:'INR'}}</span>
             </div>
             <div class="chart-stat">
               <span class="label">Growth</span>
-              <span class="value success">+18.2%</span>
+              <span class="value success">{{monthlyRevenueGrowth}}</span>
             </div>
           </div>
 
@@ -124,7 +124,7 @@
             </canvas>
 
             <div class="chart-center-label">
-              <p class="center-value">₹98,750</p>
+              <p class="center-value">{{currentMonthNetIncome | currency:'INR'}}</p>
               <p class="center-label">Net Income</p>
             </div>
           </div>
@@ -133,12 +133,12 @@
             <div class="legend-item">
               <span class="legend-color" [style.background]="'#10B981'"></span>
               <span class="legend-label">Income</span>
-              <span class="legend-value">₹125,000</span>
+              <span class="legend-value">{{currentMonthIncome | currency:'INR'}}</span>
             </div>
             <div class="legend-item">
               <span class="legend-color" [style.background]="'#EF4444'"></span>
               <span class="legend-label">Expenses</span>
-              <span class="legend-value">₹26,250</span>
+              <span class="legend-value">{{currentMonthExpenses | currency:'INR'}}</span>
             </div>
           </div>
         </mat-card-content>

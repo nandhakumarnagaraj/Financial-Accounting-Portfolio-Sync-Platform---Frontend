@@ -37,10 +37,9 @@ export class XeroConnectionComponent implements OnInit {
   ngOnInit(): void {
     this.dashboardService.getDashboardStats().subscribe(stats => {
       this.xeroConnected = stats.xeroConnected;
-      // Dummy data for now. In a real app, these would come from the backend.
       if (this.xeroConnected) {
-        this.tenantId = 'XERO_TENANT_ABC123';
-        this.lastSyncTime = new Date().toISOString();
+        this.tenantId = stats.tenantId; // Use data from backend
+        this.lastSyncTime = stats.lastSyncTime; // Use data from backend
       }
       this.isLoading = false;
     });
@@ -56,8 +55,9 @@ export class XeroConnectionComponent implements OnInit {
     this.xeroService.refreshToken().subscribe({
       next: (response) => {
         this.toastr.success(response.message, 'Success');
-        // Update lastSyncTime to reflect a successful refresh
-        this.lastSyncTime = new Date().toISOString();
+        // Assuming refreshToken response might contain updated lastSyncTime or it needs to be refetched
+        // For now, we'll optimistically update it to current time if no backend value is returned.
+        this.lastSyncTime = response.lastSyncTime || new Date().toISOString(); // Prefer backend value
       },
       error: (err) => {
         this.toastr.error(err.error.message || 'Failed to refresh token', 'Error');

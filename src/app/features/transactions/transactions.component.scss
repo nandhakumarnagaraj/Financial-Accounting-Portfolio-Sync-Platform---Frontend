@@ -248,29 +248,38 @@
       thead {
         background: linear-gradient(135deg, rgba(17, 153, 142, 0.05) 0%, rgba(56, 239, 125, 0.05) 100%);
 
-        th {
-          font-weight: 700;
-          color: $gray-900;
-          padding: 20px 16px;
-          border-bottom: 2px solid $gray-200;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          font-size: 12px;
-
-          .header-cell {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-
-            mat-icon {
-              font-size: 18px;
-              width: 18px;
-              height: 18px;
-              color: #11998e;
-            }
-          }
-        }
-      }
+                  th {
+                    font-weight: 700;
+                    color: $gray-900;
+                    padding: 20px 16px;
+                    border-bottom: 2px solid $gray-200;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    font-size: 12px;
+                    white-space: nowrap; // Ensure text and icon stay on one line
+        
+                                            .header-cell {
+        
+                                              display: flex;
+        
+                                              align-items: center;
+        
+                                              gap: 8px;
+        
+                                
+        
+                                              span {
+        
+                                                line-height: 1;
+        
+                                                margin: 0;
+        
+                                                padding: 0;
+        
+                                              }
+        
+                                            }
+                  }      }
 
       tbody {
         tr {
