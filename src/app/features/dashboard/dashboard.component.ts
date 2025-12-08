@@ -146,23 +146,6 @@ throw new Error('Method not implemented.');
 
   constructor(private dashboardService: DashboardService) {}
 
-  ngOnInit(): void {
-    forkJoin({
-      dashboardStats: this.dashboardService.getDashboardStats()
-    }).subscribe({
-      next: (result) => {
-        this.dashboardStats = result.dashboardStats;
-        this.processMonthlyRevenueData();
-        this.processIncomeVsExpensesData();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading dashboard data', err);
-        this.isLoading = false;
-      }
-    });
-  }
-
   private processMonthlyRevenueData(): void {
     if (!this.dashboardStats || !this.dashboardStats.invoices) {
       return;
@@ -269,5 +252,26 @@ throw new Error('Method not implemented.');
     console.log('Current Month Income:', income);
     console.log('Current Month Expenses:', expenses);
     console.log('Expense Income Chart Data:', this.expenseIncomeChartData.datasets[0].data);
+  }
+  ngOnInit(): void {
+    this.loadDashboardData();
+  }
+
+  loadDashboardData(): void {
+    this.isLoading = true;
+    forkJoin({
+      dashboardStats: this.dashboardService.getDashboardStats()
+    }).subscribe({
+      next: (result) => {
+        this.dashboardStats = result.dashboardStats;
+        this.processMonthlyRevenueData();
+        this.processIncomeVsExpensesData();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading dashboard data', err);
+        this.isLoading = false;
+      }
+    });
   }
 }

@@ -45,7 +45,7 @@
         <mat-icon>schedule</mat-icon>
       </div>
       <div class="stat-info">
-        <p class="stat-label">Pending</p>
+        <p class="stat-label">Authorised</p>
         <h3 class="stat-value">{{ getPendingCount() }}</h3>
       </div>
     </div>
@@ -86,7 +86,7 @@
         <ng-container matColumnDef="invoiceNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="header-cell">
-              Invoice #
+              Invoice 
             </div>
           </th>
           <td mat-cell *matCellDef="let invoice">
@@ -102,7 +102,7 @@
           </th>
           <td mat-cell *matCellDef="let invoice">
             <div class="contact-cell">
-              <div class="avatar">{{ invoice.contactName ? invoice.contactName[0] : '?' }}</div>
+              
               <span>{{ invoice.contactName }}</span>
             </div>
           </td>

@@ -103,15 +103,13 @@ export class InvoicesComponent implements OnInit {
 
     getPaidCount(): number {
       return this.allInvoices.filter(invoice =>
-        invoice.status.toLowerCase().includes('paid') ||
-        invoice.status.toLowerCase().includes('authorised')
+        invoice.status.toLowerCase().includes('paid') 
       ).length;
     }
   
     getPendingCount(): number {
       return this.allInvoices.filter(invoice =>
-        !invoice.status.toLowerCase().includes('paid') &&
-        !invoice.status.toLowerCase().includes('authorised')
+        invoice.status.toLowerCase().includes('authorised')
       ).length;
     }
   
