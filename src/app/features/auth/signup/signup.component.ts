@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-signup',
@@ -22,7 +23,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule
   ],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
@@ -30,6 +32,8 @@ import { MatSelectModule } from '@angular/material/select';
 export class SignupComponent {
   signupForm: FormGroup;
   isLoading = false;
+  hidePassword = true;
+  hideConfirmPassword = true;
   roles = ['ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_ANALYST'];
 
   constructor(
@@ -53,8 +57,28 @@ export class SignupComponent {
       ? null : { mismatch: true };
   }
 
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.hideConfirmPassword = !this.hideConfirmPassword;
+  }
+
+  getRoleDisplay(role: string): string {
+    const roleMap: { [key: string]: string } = {
+      'ROLE_ADMIN': 'Administrator',
+      'ROLE_ACCOUNTANT': 'Accountant',
+      'ROLE_ANALYST': 'Financial Analyst'
+    };
+    return roleMap[role] || role;
+  }
+
   onSubmit() {
     if (this.signupForm.invalid) {
+      Object.keys(this.signupForm.controls).forEach(key => {
+        this.signupForm.get(key)?.markAsTouched();
+      });
       return;
     }
 

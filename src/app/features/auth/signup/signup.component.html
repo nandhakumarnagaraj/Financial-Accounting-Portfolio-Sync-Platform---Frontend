@@ -1,67 +1,134 @@
-<div class="signup-container">
-  <div class="auth-card">
-    <h2 class="auth-title">Join FinSync!</h2>
-    <p class="auth-subtitle">Create your account to get started</p>
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Username</mat-label>
-          <input matInput formControlName="username" required>
-          <mat-error *ngIf="signupForm.get('username')?.hasError('required')">Username is required</mat-error>
-          <mat-error *ngIf="signupForm.get('username')?.hasError('minlength')">Username must be at least 3 characters</mat-error>
-          <mat-error *ngIf="signupForm.get('username')?.hasError('maxlength')">Username cannot be more than 20 characters</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" required>
-          <mat-error *ngIf="signupForm.get('email')?.hasError('required')">Email is required</mat-error>
-          <mat-error *ngIf="signupForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" required>
-          <mat-error *ngIf="signupForm.get('password')?.hasError('required')">Password is required</mat-error>
-          <mat-error *ngIf="signupForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Confirm Password</mat-label>
-          <input matInput type="password" formControlName="confirmPassword" required>
-          <mat-error *ngIf="signupForm.get('confirmPassword')?.hasError('required')">Please confirm your password</mat-error>
-          <mat-error *ngIf="signupForm.hasError('mismatch')">Passwords do not match</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Roles</mat-label>
-            <mat-select formControlName="roles" multiple>
-                <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-      </div>
-
-      <mat-checkbox formControlName="terms" class="w-100 mb-3">
-        I agree to the <a routerLink="/terms">Terms & Conditions</a>
-      </mat-checkbox>
-      <mat-error *ngIf="signupForm.get('terms')?.hasError('requiredTrue')">You must accept the terms and conditions</mat-error>
-
-      <button mat-raised-button color="primary" type="submit" [disabled]="isLoading" class="w-100 primary-button">
-        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-        <span *ngIf="!isLoading">Sign Up</span>
-      </button>
-
-      <p class="auth-footer">
-        Already have an account? <a routerLink="/login">Login</a>
-      </p>
-    </form>
+<form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
+  <!-- Username Field -->
+  <div class="form-group">
+    <mat-form-field appearance="outline" class="modern-field">
+      <mat-label>
+        <span>Username</span>
+      </mat-label>
+      <input matInput formControlName="username" required autocomplete="username">
+      <mat-error *ngIf="signupForm.get('username')?.hasError('required')">
+        Username is required
+      </mat-error>
+      <mat-error *ngIf="signupForm.get('username')?.hasError('minlength')">
+        At least 3 characters required
+      </mat-error>
+      <mat-error *ngIf="signupForm.get('username')?.hasError('maxlength')">
+        Maximum 20 characters allowed
+      </mat-error>
+    </mat-form-field>
   </div>
-</div>
+
+  <!-- Email Field -->
+  <div class="form-group">
+    <mat-form-field appearance="outline" class="modern-field">
+      <mat-label>
+        <span>Email Address</span>
+      </mat-label>
+      <input matInput type="email" formControlName="email" required autocomplete="email">
+      <mat-error *ngIf="signupForm.get('email')?.hasError('required')">
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="signupForm.get('email')?.hasError('email')">
+        Please enter a valid email
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Password Field -->
+  <div class="form-group">
+    <mat-form-field appearance="outline" class="modern-field">
+      <mat-label>
+        <span>Password</span>
+      </mat-label>
+      <input matInput 
+             [type]="hidePassword ? 'password' : 'text'" 
+             formControlName="password" 
+             required
+             autocomplete="new-password">
+      <button mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="visibility-toggle">
+        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="signupForm.get('password')?.hasError('required')">
+        Password is required
+      </mat-error>
+      <mat-error *ngIf="signupForm.get('password')?.hasError('minlength')">
+        At least 6 characters required
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Confirm Password Field -->
+  <div class="form-group">
+    <mat-form-field appearance="outline" class="modern-field">
+      <mat-label>
+        <span>Confirm Password</span>
+      </mat-label>
+      <input matInput 
+             [type]="hideConfirmPassword ? 'password' : 'text'" 
+             formControlName="confirmPassword" 
+             required
+             autocomplete="new-password">
+      <button mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="visibility-toggle">
+        <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="signupForm.get('confirmPassword')?.hasError('required')">
+        Please confirm your password
+      </mat-error>
+      <mat-error *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.touched">
+        Passwords do not match
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Roles Field -->
+  <div class="form-group">
+    <mat-form-field appearance="outline" class="modern-field">
+      <mat-label>
+        <span>Select Roles</span>
+      </mat-label>
+      <mat-select formControlName="roles" multiple>
+        <mat-option *ngFor="let role of roles" [value]="role">
+          <div class="role-option">
+            <span>{{ getRoleDisplay(role) }}</span>
+          </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Terms Checkbox -->
+  <div class="terms-section">
+    <mat-checkbox formControlName="terms" class="terms-checkbox">
+      <span class="terms-text">
+        I agree to the 
+        <a href="javascript:void(0)" class="terms-link">Terms & Conditions</a>
+        and 
+        <a href="javascript:void(0)" class="terms-link">Privacy Policy</a>
+      </span>
+    </mat-checkbox>
+    <mat-error *ngIf="signupForm.get('terms')?.hasError('requiredTrue') && signupForm.get('terms')?.touched" class="terms-error">
+      <span>You must accept the terms</span>
+    </mat-error>
+  </div>
+
+  <!-- Submit Button -->
+  <button mat-raised-button 
+          type="submit" 
+          [disabled]="isLoading || signupForm.invalid" 
+          class="submit-button">
+    <span class="button-content" *ngIf="!isLoading">
+      <span>Create Account</span>
+    </span>
+    <mat-spinner *ngIf="isLoading" diameter="24" class="button-spinner"></mat-spinner>
+  </button>
+
+
+</form>

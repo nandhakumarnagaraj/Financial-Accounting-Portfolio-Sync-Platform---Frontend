@@ -28,8 +28,9 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-refreshDashboard() {
-throw new Error('Method not implemented.');
+
+refreshDashboard(): void {
+this.loadDashboardData();
 }
   isLoading = true;
   dashboardStats: DashboardStatsResponse | null = null;

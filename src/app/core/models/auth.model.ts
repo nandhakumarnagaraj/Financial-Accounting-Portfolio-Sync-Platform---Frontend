@@ -19,14 +19,22 @@ export interface JwtResponse {
   roles: string[];
 }
 
+export interface Role {
+  id: number;
+  name: string;
+}
+
 export interface User {
   id: number;
   username: string;
   email: string;
-  roles: string[];
+  roles: Role[] | string[];  // Accept both formats
   xeroAccessToken?: string;
+  xeroRefreshToken?: string;
   xeroTenantId?: string;
-  tokenExpiry?: string;
+  xeroUserId?: string;
+  tokenExpiry?: string;  // ISO 8601 datetime string
+  password?: string;
   createdAt?: string;
   updatedAt?: string;
 }

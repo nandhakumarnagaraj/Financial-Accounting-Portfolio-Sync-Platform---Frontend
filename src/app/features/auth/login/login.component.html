@@ -1,38 +1,70 @@
-<div class="login-container">
-  <div class="auth-card">
-    <h2 class="auth-title">Welcome Back!</h2>
-    <p class="auth-subtitle">Login to your FinSync account</p>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Username</mat-label>
-          <input matInput formControlName="username" required>
-          <mat-error *ngIf="loginForm.get('username')?.hasError('required')">Username is required</mat-error>
-          <mat-error *ngIf="loginForm.get('username')?.hasError('minlength')">Username must be at least 3 characters</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-field">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" required>
-          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
-          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="mb-3">
-        <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
-      </div>
-
-      <button mat-raised-button color="primary" type="submit" [disabled]="isLoading" class="w-100 primary-button">
-        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-        <span *ngIf="!isLoading">Login</span>
-      </button>
-
-      <p class="auth-footer">
-        Don't have an account? <a routerLink="/signup">Sign Up</a>
-      </p>
-    </form>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+  <!-- Username Field -->
+  <div class="form-group">
+    <mat-form-field appearance="outline" class="modern-field">
+      <mat-label>
+        <span>Username</span>
+      </mat-label>
+      <input matInput formControlName="username" required autocomplete="username">
+      <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+        Username is required
+      </mat-error>
+      <mat-error *ngIf="loginForm.get('username')?.hasError('minlength')">
+        At least 3 characters required
+      </mat-error>
+    </mat-form-field>
   </div>
-</div>
+
+  <!-- Password Field -->
+  <div class="form-group">
+    <mat-form-field appearance="outline" class="modern-field">
+      <mat-label>
+        <span>Password</span>
+      </mat-label>
+      <input matInput 
+             [type]="hidePassword ? 'password' : 'text'" 
+             formControlName="password" 
+             required
+             autocomplete="current-password">
+      <button mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="visibility-toggle">
+        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+        Password is required
+      </mat-error>
+      <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+        At least 6 characters required
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Remember Me -->
+  <div class="form-extras">
+    <mat-checkbox formControlName="rememberMe" class="remember-me">
+      <span class="checkbox-label">Remember me</span>
+    </mat-checkbox>
+
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="authError">
+    <span>{{ authError }}</span>
+  </div>
+
+  <!-- Submit Button -->
+  <button mat-raised-button 
+          type="submit" 
+          [disabled]="isLoading || loginForm.invalid" 
+          class="submit-button">
+    <span class="button-content" *ngIf="!isLoading">
+      <span>Login</span>
+    </span>
+    <mat-spinner *ngIf="isLoading" diameter="24" class="button-spinner"></mat-spinner>
+  </button>
+
+
+</form>
