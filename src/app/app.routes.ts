@@ -9,6 +9,11 @@ export const routes: Routes = [
     canActivate: [NoAuthGuard]
   },
   {
+    path: 'auth/login',
+    loadComponent: () => import('./features/auth/landing/landing.component').then(m => m.LandingComponent),
+    canActivate: [NoAuthGuard]
+  },
+  {
     path: 'dashboard',
     loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [AuthGuard]

@@ -4,7 +4,6 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { LoginRequest, SignupRequest, JwtResponse, AuthMessageResponse, User } from '../models/auth.model';
-import { XeroService } from './xero.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private xeroService: XeroService) {
+  constructor(private http: HttpClient) {
     // Load user from storage on service initialization
     const storedUser = this.getCurrentUser();
     if (storedUser) {
@@ -95,8 +94,11 @@ export class AuthService {
     sessionStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUserSubject.next(null);
-    this.xeroService.clearXeroLocalStorage();
-    // Removed XeroService dependency - cache will be cleared naturally on next login
+    
+    localStorage.removeItem('xero_connection_state');
+    localStorage.removeItem('xero_sync_timestamps');
+    localStorage.removeItem('xero_invoices_cache');
+    localStorage.removeItem('xero_transactions_cache');
   }
 
   isLoggedIn(): boolean {

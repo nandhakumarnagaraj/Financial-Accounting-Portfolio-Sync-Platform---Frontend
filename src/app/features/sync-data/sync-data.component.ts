@@ -28,19 +28,21 @@ export class SyncDataComponent implements OnInit {
     transactions: false
   };
   isSyncingAll = false;
-  lastSync = {
+  lastSync: { invoices: string | null; accounts: string | null; transactions: string | null } = {
     invoices: null,
     accounts: null,
     transactions: null
   };
 
-  constructor(private xeroService: XeroService, private toastr: ToastrService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private xeroService: XeroService,
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    const storedSyncData = this.xeroService.getSyncDataTimestamps();
-    if (storedSyncData) {
-      this.lastSync = storedSyncData;
-    }
+    // Load sync timestamps from localStorage
+    this.lastSync = this.xeroService.getSyncTimestamps();
   }
 
   syncInvoices() {
@@ -48,15 +50,15 @@ export class SyncDataComponent implements OnInit {
     this.xeroService.syncInvoices().subscribe({
       next: (res) => {
         this.toastr.success(res.message, 'Success');
-        this.lastSync.invoices = new Date().toISOString(); // Store as ISO string
-        this.xeroService.saveSyncDataTimestamps(this.lastSync);
+        // Reload timestamps from localStorage (updated by service)
+        this.lastSync = this.xeroService.getSyncTimestamps();
         this.isSyncing.invoices = false;
-        this.cdr.detectChanges(); // Manually trigger change detection
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.toastr.error(err.error.message || 'Failed to sync invoices', 'Error');
         this.isSyncing.invoices = false;
-        this.cdr.detectChanges(); // Manually trigger change detection
+        this.cdr.detectChanges();
       }
     });
   }
@@ -64,36 +66,36 @@ export class SyncDataComponent implements OnInit {
   syncAccounts() {
     this.isSyncing.accounts = true;
     this.xeroService.syncAccounts().subscribe({
-        next: (res) => {
-            this.toastr.success(res.message, 'Success');
-            this.lastSync.accounts = new Date().toISOString(); // Store as ISO string
-            this.xeroService.saveSyncDataTimestamps(this.lastSync);
-            this.isSyncing.accounts = false;
-            this.cdr.detectChanges(); // Manually trigger change detection
-        },
-        error: (err) => {
-            this.toastr.error(err.error.message || 'Failed to sync accounts', 'Error');
-            this.isSyncing.accounts = false;
-            this.cdr.detectChanges(); // Manually trigger change detection
-        }
+      next: (res) => {
+        this.toastr.success(res.message, 'Success');
+        // Reload timestamps from localStorage (updated by service)
+        this.lastSync = this.xeroService.getSyncTimestamps();
+        this.isSyncing.accounts = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.toastr.error(err.error.message || 'Failed to sync accounts', 'Error');
+        this.isSyncing.accounts = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
   syncTransactions() {
     this.isSyncing.transactions = true;
     this.xeroService.syncTransactions().subscribe({
-        next: (res) => {
-            this.toastr.success(res.message, 'Success');
-            this.lastSync.transactions = new Date().toISOString(); // Store as ISO string
-            this.xeroService.saveSyncDataTimestamps(this.lastSync);
-            this.isSyncing.transactions = false;
-            this.cdr.detectChanges(); // Manually trigger change detection
-        },
-        error: (err) => {
-            this.toastr.error(err.error.message || 'Failed to sync transactions', 'Error');
-            this.isSyncing.transactions = false;
-            this.cdr.detectChanges(); // Manually trigger change detection
-        }
+      next: (res) => {
+        this.toastr.success(res.message, 'Success');
+        // Reload timestamps from localStorage (updated by service)
+        this.lastSync = this.xeroService.getSyncTimestamps();
+        this.isSyncing.transactions = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.toastr.error(err.error.message || 'Failed to sync transactions', 'Error');
+        this.isSyncing.transactions = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -106,17 +108,15 @@ export class SyncDataComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         this.toastr.success('All data synced successfully', 'Success');
-        this.lastSync.invoices = new Date().toISOString(); // Store as ISO string
-        this.lastSync.accounts = new Date().toISOString(); // Store as ISO string
-        this.lastSync.transactions = new Date().toISOString(); // Store as ISO string
-        this.xeroService.saveSyncDataTimestamps(this.lastSync);
+        // Reload timestamps from localStorage (updated by service)
+        this.lastSync = this.xeroService.getSyncTimestamps();
         this.isSyncingAll = false;
-        this.cdr.detectChanges(); // Manually trigger change detection
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.toastr.error(err.error.message || 'Failed to sync all data', 'Error');
         this.isSyncingAll = false;
-        this.cdr.detectChanges(); // Manually trigger change detection
+        this.cdr.detectChanges();
       }
     });
   }

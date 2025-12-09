@@ -88,10 +88,13 @@ export class SignupComponent {
     this.authService.signup({ username, email, password, roles }).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.toastr.success(response.message, 'Success');
-        // The prompt says to auto-fill login form. This is tricky in a separate component.
-        // A better UX might be to redirect to login with a success message.
-        // For now, we just show success. The user can then click on the login link.
+        this.toastr.success(response.message, 'Registration Successful');
+        
+        // Navigate to login page, passing username and password via state
+        // Wait a moment for the toast to be visible
+        setTimeout(() => {
+          this.router.navigate(['/auth/login'], { state: { username, password } });
+        }, 1500);
       },
       error: (err) => {
         this.isLoading = false;
