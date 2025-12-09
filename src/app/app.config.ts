@@ -1,5 +1,5 @@
 import { provideHttpClient, withXsrfConfiguration, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, LOCALE_ID } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, ErrorHandler } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -27,6 +27,7 @@ export const appConfig: ApplicationConfig = {
       }),
       withInterceptors([authInterceptor])
     ),
-    { provide: LOCALE_ID, useValue: 'en-IN' }
+    { provide: LOCALE_ID, useValue: 'en-IN' },
+    { provide: ErrorHandler, useClass: ErrorHandler }
   ]
 };

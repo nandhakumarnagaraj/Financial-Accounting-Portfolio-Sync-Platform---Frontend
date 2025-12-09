@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { XeroService } from '../../core/services/xero.service';
 import { ToastrService } from 'ngx-toastr';
@@ -6,7 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sync-data',
@@ -19,9 +20,11 @@ import { forkJoin } from 'rxjs';
     MatProgressSpinnerModule
   ],
   templateUrl: './sync-data.component.html',
-  styleUrls: ['./sync-data.component.scss']
+  styleUrls: ['./sync-data.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SyncDataComponent implements OnInit {
+export class SyncDataComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   isSyncing = {
     invoices: false,
     accounts: false,
@@ -41,8 +44,15 @@ export class SyncDataComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Load sync timestamps from localStorage
-    this.lastSync = this.xeroService.getSyncTimestamps();
+    this.xeroService.syncTimestamps$.pipe(takeUntil(this.destroy$)).subscribe(timestamps => {
+      this.lastSync = timestamps;
+      this.cdr.detectChanges(); // Manually trigger change detection
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   syncInvoices() {
@@ -51,7 +61,6 @@ export class SyncDataComponent implements OnInit {
       next: (res) => {
         this.toastr.success(res.message, 'Success');
         // Reload timestamps from localStorage (updated by service)
-        this.lastSync = this.xeroService.getSyncTimestamps();
         this.isSyncing.invoices = false;
         this.cdr.detectChanges();
       },
@@ -69,7 +78,6 @@ export class SyncDataComponent implements OnInit {
       next: (res) => {
         this.toastr.success(res.message, 'Success');
         // Reload timestamps from localStorage (updated by service)
-        this.lastSync = this.xeroService.getSyncTimestamps();
         this.isSyncing.accounts = false;
         this.cdr.detectChanges();
       },
@@ -87,7 +95,6 @@ export class SyncDataComponent implements OnInit {
       next: (res) => {
         this.toastr.success(res.message, 'Success');
         // Reload timestamps from localStorage (updated by service)
-        this.lastSync = this.xeroService.getSyncTimestamps();
         this.isSyncing.transactions = false;
         this.cdr.detectChanges();
       },
@@ -109,7 +116,6 @@ export class SyncDataComponent implements OnInit {
       next: (res) => {
         this.toastr.success('All data synced successfully', 'Success');
         // Reload timestamps from localStorage (updated by service)
-        this.lastSync = this.xeroService.getSyncTimestamps();
         this.isSyncingAll = false;
         this.cdr.detectChanges();
       },

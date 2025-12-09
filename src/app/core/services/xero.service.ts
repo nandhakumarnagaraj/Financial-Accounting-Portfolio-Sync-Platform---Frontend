@@ -24,9 +24,16 @@ export class XeroService {
   private _invoicesCache = new BehaviorSubject<XeroInvoice[] | null>(null);
   private _transactionsCache = new BehaviorSubject<XeroTransaction[] | null>(null);
   private _xeroConnectionStateCache = new BehaviorSubject<XeroConnectionState | null>(null);
+  private _syncTimestampsCache = new BehaviorSubject<{ invoices: string | null; accounts: string | null; transactions: string | null }>(
+    { invoices: null, accounts: null, transactions: null }
+  );
 
   get xeroConnectionState$(): Observable<XeroConnectionState | null> {
     return this._xeroConnectionStateCache.asObservable();
+  }
+
+  get syncTimestamps$(): Observable<{ invoices: string | null; accounts: string | null; transactions: string | null }> {
+    return this._syncTimestampsCache.asObservable();
   }
 
   constructor(
@@ -66,6 +73,16 @@ export class XeroService {
         this._xeroConnectionStateCache.next(JSON.parse(cachedState));
       } catch (e) {
         console.error('Error parsing cached connection state', e);
+      }
+    }
+
+    // Load sync timestamps cache
+    const cachedSyncTimestamps = localStorage.getItem(this.LOCAL_STORAGE_SYNC_TIMESTAMPS_KEY);
+    if (cachedSyncTimestamps) {
+      try {
+        this._syncTimestampsCache.next(JSON.parse(cachedSyncTimestamps));
+      } catch (e) {
+        console.error('Error parsing cached sync timestamps', e);
       }
     }
   }
@@ -198,21 +215,17 @@ export class XeroService {
 
   // Sync timestamp management
   getSyncTimestamps(): { invoices: string | null; accounts: string | null; transactions: string | null } {
-    const stored = localStorage.getItem(this.LOCAL_STORAGE_SYNC_TIMESTAMPS_KEY);
-    if (stored) {
-      try {
-        return JSON.parse(stored);
-      } catch (e) {
-        console.error('Error parsing sync timestamps', e);
-      }
-    }
-    return { invoices: null, accounts: null, transactions: null };
+    return this._syncTimestampsCache.getValue();
   }
 
   private updateSyncTimestamp(type: 'invoices' | 'accounts' | 'transactions'): void {
-    const timestamps = this.getSyncTimestamps();
-    timestamps[type] = new Date().toISOString();
-    localStorage.setItem(this.LOCAL_STORAGE_SYNC_TIMESTAMPS_KEY, JSON.stringify(timestamps));
+    const timestamps = this._syncTimestampsCache.getValue();
+    const updatedTimestamps = { ...timestamps, [type]: new Date().toISOString() };
+    localStorage.setItem(this.LOCAL_STORAGE_SYNC_TIMESTAMPS_KEY, JSON.stringify(updatedTimestamps));
+    this._syncTimestampsCache.next(updatedTimestamps);
+
+    // Also trigger a refresh of the Xero connection state to update lastSyncTime in UI
+    this.getXeroConnectionState(true).subscribe();
   }
 
   clearCachedData(): void {
