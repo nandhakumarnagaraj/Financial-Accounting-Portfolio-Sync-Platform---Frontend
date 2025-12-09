@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginComponent } from '../login/login.component';
@@ -16,7 +16,10 @@ import { SignupComponent } from '../signup/signup.component';
 export class LandingComponent implements OnInit {
   isLoginView = true;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     // Check if there's a 'view' query parameter to determine which view to show
@@ -27,6 +30,16 @@ export class LandingComponent implements OnInit {
         this.isLoginView = true;
       }
     });
+
+    // Check if we're coming from signup with credentials
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state;
+    const historyState = window.history.state;
+
+    // If coming from signup, ensure we show login view
+    if ((state && state['fromSignup']) || (historyState && historyState['fromSignup'])) {
+      this.isLoginView = true;
+    }
   }
 
   toggleView() {

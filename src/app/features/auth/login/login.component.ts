@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIcon } from "@angular/material/icon";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'app-login',
@@ -22,7 +22,7 @@ import { MatIcon } from "@angular/material/icon";
     MatButtonModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    MatIcon
+    MatIconModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -47,14 +47,32 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Check if we're coming from signup with credentials
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
 
-    if (state && state['username'] && state['password']) {
+    // Also check history state for when component reloads
+    const historyState = window.history.state;
+
+    if (state && state['fromSignup'] && state['username'] && state['password']) {
+      // Coming from signup - populate form
       this.loginForm.patchValue({
         username: state['username'],
-        password: state['password']
+        password: state['password'],
+        rememberMe: true // Optionally set remember me
       });
+      
+      // Show a helpful message
+      this.toastr.info('Please click Login to continue', 'Registration Successful');
+    } else if (historyState && historyState['fromSignup'] && historyState['username'] && historyState['password']) {
+      // Handle the case where component reloaded but state is in history
+      this.loginForm.patchValue({
+        username: historyState['username'],
+        password: historyState['password'],
+        rememberMe: true
+      });
+      
+      this.toastr.info('Please click Login to continue', 'Registration Successful');
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,8 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from "@angular/material/icon";
 import { MatSelectModule } from '@angular/material/select';
-import { MatIconModule } from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-signup',
@@ -23,14 +24,14 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule
   ],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
 })
-export class SignupComponent {
-  signupForm: FormGroup;
+export class SignupComponent implements OnInit {
+  signupForm!: FormGroup;
   isLoading = false;
   hidePassword = true;
   hideConfirmPassword = true;
@@ -41,7 +42,9 @@ export class SignupComponent {
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.signupForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       email: ['', [Validators.required, Validators.email]],
@@ -89,11 +92,16 @@ export class SignupComponent {
       next: (response) => {
         this.isLoading = false;
         this.toastr.success(response.message, 'Registration Successful');
-        
+
         // Navigate to login page, passing username and password via state
-        // Wait a moment for the toast to be visible
         setTimeout(() => {
-          this.router.navigate(['/auth/login'], { state: { username, password } });
+          this.router.navigate(['/auth/login'], {
+            state: {
+              username,
+              password,
+              fromSignup: true
+            }
+          });
         }, 1500);
       },
       error: (err) => {

@@ -25,6 +25,10 @@ export class XeroService {
   private _transactionsCache = new BehaviorSubject<XeroTransaction[] | null>(null);
   private _xeroConnectionStateCache = new BehaviorSubject<XeroConnectionState | null>(null);
 
+  get xeroConnectionState$(): Observable<XeroConnectionState | null> {
+    return this._xeroConnectionStateCache.asObservable();
+  }
+
   constructor(
     private http: HttpClient,
     private authService: AuthService,
@@ -83,6 +87,10 @@ export class XeroService {
         
         // Update sync timestamp
         this.updateSyncTimestamp('invoices');
+        this.dashboardService.refreshDashboardStats().subscribe(() => {
+          // After dashboard stats are refreshed, refresh the connection state
+          this.getXeroConnectionState(true).subscribe();
+        });
       })
     );
   }
@@ -92,6 +100,10 @@ export class XeroService {
       tap(() => {
         // Update sync timestamp
         this.updateSyncTimestamp('accounts');
+        this.dashboardService.refreshDashboardStats().subscribe(() => {
+          // After dashboard stats are refreshed, refresh the connection state
+          this.getXeroConnectionState(true).subscribe();
+        });
       })
     );
   }
@@ -105,6 +117,10 @@ export class XeroService {
         
         // Update sync timestamp
         this.updateSyncTimestamp('transactions');
+        this.dashboardService.refreshDashboardStats().subscribe(() => {
+          // After dashboard stats are refreshed, refresh the connection state
+          this.getXeroConnectionState(true).subscribe();
+        });
       })
     );
   }
@@ -205,16 +221,5 @@ export class XeroService {
     this._xeroConnectionStateCache.next(null);
   }
 
-  clearAllXeroData(): void {
-    // Clear all in-memory caches
-    this._invoicesCache.next(null);
-    this._transactionsCache.next(null);
-    this._xeroConnectionStateCache.next(null);
-    
-    // Clear all localStorage data
-    localStorage.removeItem(this.LOCAL_STORAGE_XERO_STATE_KEY);
-    localStorage.removeItem(this.LOCAL_STORAGE_SYNC_TIMESTAMPS_KEY);
-    localStorage.removeItem(this.LOCAL_STORAGE_INVOICES_KEY);
-    localStorage.removeItem(this.LOCAL_STORAGE_TRANSACTIONS_KEY);
-  }
+
 }
