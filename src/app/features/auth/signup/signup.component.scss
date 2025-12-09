@@ -23,7 +23,7 @@
 .terms-checkbox {
   .terms-text {
     color: #6b7280;
-    font-size: 0.8125rem;
+    font-size: 0.7125rem;
     font-weight: 500;
     line-height: 1.5;
   }
@@ -64,7 +64,7 @@
 
 .submit-button {
   width: 100%;
-  height: 3.5rem;
+  height: 3rem;
   background: linear-gradient(135deg, #1E40AF 0%, #7C3AED 100%);
   color: white;
   border-radius: 1rem;
@@ -118,7 +118,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.1rem;
     
     mat-icon {
       font-size: 1.25rem;
@@ -222,8 +222,9 @@
     
     .mat-mdc-input-element {
       color: #111827;
-      font-size: 15px;
+      font-size: 10px;
       font-weight: 500;
+      padding: 0px 1px;
       
       &::placeholder {
         color: #9ca3af;
@@ -234,7 +235,7 @@
       color: #6b7280;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 0px;
       
       .field-icon {
         font-size: 18px;
@@ -369,7 +370,7 @@
 /* Responsive */
 @media (max-width: 480px) {
   .form-group {
-    margin-bottom: 1.125rem;
+    margin-bottom: 1rem;
   }
   
   .terms-section {

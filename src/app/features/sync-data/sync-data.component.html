@@ -20,7 +20,6 @@
           [disabled]="isSyncing.invoices || isSyncingAll">
           <mat-spinner *ngIf="isSyncing.invoices" diameter="20"></mat-spinner>
           <span *ngIf="!isSyncing.invoices">
-            <mat-icon>sync</mat-icon>
             Sync Invoices
           </span>
         </button>
@@ -45,7 +44,6 @@
           [disabled]="isSyncing.accounts || isSyncingAll">
           <mat-spinner *ngIf="isSyncing.accounts" diameter="20"></mat-spinner>
           <span *ngIf="!isSyncing.accounts">
-            <mat-icon>sync</mat-icon>
             Sync Accounts
           </span>
         </button>
@@ -70,7 +68,6 @@
           [disabled]="isSyncing.transactions || isSyncingAll">
           <mat-spinner *ngIf="isSyncing.transactions" diameter="20"></mat-spinner>
           <span *ngIf="!isSyncing.transactions">
-            <mat-icon>sync</mat-icon>
             Sync Transactions
           </span>
         </button>
@@ -78,20 +75,5 @@
     </mat-card>
   </div>
 
-  <!-- Sync All Section -->
-  <div class="sync-all-section">
-    <h2>Sync Everything at Once</h2>
-    <p>Perform a complete synchronization of all financial data from Xero in one operation.</p>
-    <button 
-      mat-raised-button 
-      class="sync-all-btn"
-      (click)="syncAll()"
-      [disabled]="isSyncingAll">
-      <mat-spinner *ngIf="isSyncingAll" diameter="24"></mat-spinner>
-      <span *ngIf="!isSyncingAll">
-        <mat-icon>cloud_sync</mat-icon>
-        Sync All Data
-      </span>
-    </button>
-  </div>
+
 </div>

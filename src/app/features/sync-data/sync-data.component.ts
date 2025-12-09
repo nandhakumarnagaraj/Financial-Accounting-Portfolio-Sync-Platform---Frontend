@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { XeroService } from '../../core/services/xero.service';
 import { ToastrService } from 'ngx-toastr';
@@ -34,7 +34,7 @@ export class SyncDataComponent {
     transactions: null
   };
 
-  constructor(private xeroService: XeroService, private toastr: ToastrService) {}
+  constructor(private xeroService: XeroService, private toastr: ToastrService, private cdr: ChangeDetectorRef) {}
 
   syncInvoices() {
     this.isSyncing.invoices = true;
@@ -43,10 +43,12 @@ export class SyncDataComponent {
         this.toastr.success(res.message, 'Success');
         this.lastSync.invoices = new Date() as any;
         this.isSyncing.invoices = false;
+        this.cdr.detectChanges(); // Manually trigger change detection
       },
       error: (err) => {
         this.toastr.error(err.error.message || 'Failed to sync invoices', 'Error');
         this.isSyncing.invoices = false;
+        this.cdr.detectChanges(); // Manually trigger change detection
       }
     });
   }
@@ -58,10 +60,12 @@ export class SyncDataComponent {
             this.toastr.success(res.message, 'Success');
             this.lastSync.accounts = new Date() as any;
             this.isSyncing.accounts = false;
+            this.cdr.detectChanges(); // Manually trigger change detection
         },
         error: (err) => {
             this.toastr.error(err.error.message || 'Failed to sync accounts', 'Error');
             this.isSyncing.accounts = false;
+            this.cdr.detectChanges(); // Manually trigger change detection
         }
     });
   }
@@ -73,10 +77,12 @@ export class SyncDataComponent {
             this.toastr.success(res.message, 'Success');
             this.lastSync.transactions = new Date() as any;
             this.isSyncing.transactions = false;
+            this.cdr.detectChanges(); // Manually trigger change detection
         },
         error: (err) => {
             this.toastr.error(err.error.message || 'Failed to sync transactions', 'Error');
             this.isSyncing.transactions = false;
+            this.cdr.detectChanges(); // Manually trigger change detection
         }
     });
   }
@@ -94,10 +100,12 @@ export class SyncDataComponent {
         this.lastSync.accounts = new Date() as any;
         this.lastSync.transactions = new Date() as any;
         this.isSyncingAll = false;
+        this.cdr.detectChanges(); // Manually trigger change detection
       },
       error: (err) => {
         this.toastr.error(err.error.message || 'Failed to sync all data', 'Error');
         this.isSyncingAll = false;
+        this.cdr.detectChanges(); // Manually trigger change detection
       }
     });
   }

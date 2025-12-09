@@ -39,3 +39,10 @@ export interface MessageResponse {
     message: string;
     lastSyncTime?: string;
 }
+
+export interface XeroConnectionState {
+  xeroConnected: boolean;
+  tenantId: string | null;
+  lastSyncTime: string | null;
+  tokenExpiresAt: string | null;
+}

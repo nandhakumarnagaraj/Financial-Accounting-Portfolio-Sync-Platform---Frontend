@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { XeroService } from '../../core/services/xero.service';
 import { DashboardService } from '../../core/services/dashboard.service';
@@ -41,11 +41,12 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
     private xeroService: XeroService,
     private dashboardService: DashboardService,
     private authService: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef // Inject ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.loadConnectionStatus();
+    this.loadConnectionStatus(false); // Initial load, don't force refresh
     this.startExpiryTimer();
     this.startAuthWindowListener();
   }
@@ -58,31 +59,29 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadConnectionStatus(): void {
+  loadConnectionStatus(forceRefresh: boolean = false): void {
     this.isLoading = true;
     
-    // Fetch both dashboard stats and current user profile
-    Promise.all([
-      this.dashboardService.getDashboardStats().toPromise(),
-      this.authService.getCurrentUserProfile().toPromise()
-    ]).then(([stats, user]) => {
-      if (stats && user) {
-        this.xeroConnected = stats.xeroConnected && !!user.xeroAccessToken;
+    this.xeroService.getXeroConnectionState(forceRefresh).subscribe({
+      next: (state) => {
+        this.xeroConnected = state.xeroConnected;
+        this.tenantId = state.tenantId;
+        this.lastSyncTime = state.lastSyncTime;
+        this.tokenExpiresAt = state.tokenExpiresAt;
         
         if (this.xeroConnected) {
-          this.tenantId = user.xeroTenantId || stats.tenantId || null;
-          this.lastSyncTime = stats.lastSyncTime;
-          this.tokenExpiresAt = user.tokenExpiry || null;
-          
           // Update expiry timer immediately
           this.updateTimeUntilExpiry();
         }
+        this.isLoading = false;
+        this.cdr.detectChanges(); // Manually trigger change detection after updates
+      },
+      error: (err) => {
+        console.error('Error loading connection status', err);
+        this.isLoading = false;
+        this.toastr.error('Failed to load connection status', 'Error');
+        this.cdr.detectChanges(); // Manually trigger change detection after error
       }
-      this.isLoading = false;
-    }).catch((err) => {
-      console.error('Error loading connection status', err);
-      this.isLoading = false;
-      this.toastr.error('Failed to load connection status', 'Error');
     });
   }
 
@@ -111,6 +110,7 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
           err.error?.message || 'Failed to get Xero authorization URL',
           'Error'
         );
+        this.cdr.detectChanges(); // Manually trigger change detection after error
       }
     });
   }
@@ -128,8 +128,9 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
         if (this.authWindow && this.authWindow.closed) {
           // Wait a moment for backend to process the OAuth callback
           setTimeout(() => {
-            this.loadConnectionStatus();
+            this.loadConnectionStatus(true); // Force refresh after auth completion
             this.toastr.success('Xero authentication completed! Connection status updated.', 'Success');
+            this.cdr.detectChanges(); // Manually trigger change detection
           }, 2000);
           return;
         }
@@ -137,6 +138,7 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
         // Stop polling after 30 minutes
         if (pollCount >= maxPolls) {
           this.toastr.info('Authentication window timeout', 'Info');
+          this.cdr.detectChanges(); // Manually trigger change detection
           return;
         }
       });
@@ -165,6 +167,7 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
             this.toastr.error('Xero token has expired. Please reconnect to Xero.', 'Token Expired');
           }
         }
+        this.cdr.detectChanges(); // Manually trigger change detection after expiry check
       });
   }
 
@@ -181,12 +184,12 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
     if (diffMs <= 0) {
       this.timeUntilExpiry = 'Expired';
       this.xeroConnected = false;
-      return;
+    } else {
+      const minutes = Math.floor(diffMs / 60000);
+      const seconds = Math.floor((diffMs % 60000) / 1000);
+      this.timeUntilExpiry = `${minutes}m ${seconds}s`;
     }
-
-    const minutes = Math.floor(diffMs / 60000);
-    const seconds = Math.floor((diffMs % 60000) / 1000);
-    this.timeUntilExpiry = `${minutes}m ${seconds}s`;
+    this.cdr.detectChanges(); // Manually trigger change detection
   }
 
   private startAuthWindowListener(): void {
@@ -197,7 +200,7 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
 
       if (event.data?.type === 'XERO_AUTH_SUCCESS') {
         this.toastr.success('Xero connected successfully!', 'Success');
-        this.loadConnectionStatus();
+        this.loadConnectionStatus(true); // Force refresh after auth completion
         if (this.authWindow && !this.authWindow.closed) {
           this.authWindow.close();
         }
@@ -206,6 +209,7 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
         if (this.authWindow && !this.authWindow.closed) {
           this.authWindow.close();
         }
+        this.cdr.detectChanges(); // Manually trigger change detection after failure
       }
     });
   }
@@ -215,7 +219,7 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.toastr.success(response.message || 'Token refreshed successfully', 'Success');
         // Reload connection status to get updated token expiry
-        this.loadConnectionStatus();
+        this.loadConnectionStatus(true); // Force refresh after token refresh
       },
       error: (err) => {
         console.error('Token refresh error:', err);
@@ -225,6 +229,7 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
         );
         // Force reconnection if refresh fails
         this.xeroConnected = false;
+        this.cdr.detectChanges(); // Manually trigger change detection after error
       }
     });
   }
@@ -242,12 +247,14 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
         this.tokenExpiresAt = null;
         this.timeUntilExpiry = '';
         this.toastr.success('Xero disconnected successfully', 'Success');
+        this.cdr.detectChanges(); // Manually trigger change detection
       },
       error: (err) => {
         this.toastr.error(
           err.error?.message || 'Failed to disconnect Xero',
           'Error'
         );
+        this.cdr.detectChanges(); // Manually trigger change detection after error
       }
     });
   }

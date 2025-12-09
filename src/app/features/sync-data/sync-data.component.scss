@@ -1,10 +1,9 @@
 @import "variables";
 
 .sync-container {
-  padding: 40px;
+  padding: 25px;
   max-width: 1200px;
   margin: auto;
-  min-height: calc(100vh - 80px);
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 
   h1 {
@@ -85,15 +84,17 @@
       border-bottom: 2px solid $gray-100;
 
       mat-icon {
-        font-size: 48px;
+        font-size: 24px;
         width: 48px;
         height: 48px;
         background: linear-gradient(135deg, $primary 0%, $accent 100%);
         color: white;
-        padding: 16px;
-        border-radius: 16px;
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
         transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       mat-card-title {
