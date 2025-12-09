@@ -1,10 +1,10 @@
-import { Injectable, Inject, forwardRef } from '@angular/core'; // Added Inject and forwardRef
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { LoginRequest, SignupRequest, JwtResponse, AuthMessageResponse, User } from '../models/auth.model';
-import { XeroService } from './xero.service'; // Import XeroService
+import { XeroService } from './xero.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, @Inject(forwardRef(() => XeroService)) private xeroService: XeroService) { // Re-inject XeroService with forwardRef
+  constructor(private http: HttpClient, private xeroService: XeroService) {
     // Load user from storage on service initialization
     const storedUser = this.getCurrentUser();
     if (storedUser) {
@@ -95,7 +95,8 @@ export class AuthService {
     sessionStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUserSubject.next(null);
-    this.xeroService.clearCachedData(); // Clear Xero service caches on logout
+    this.xeroService.clearXeroLocalStorage();
+    // Removed XeroService dependency - cache will be cleared naturally on next login
   }
 
   isLoggedIn(): boolean {

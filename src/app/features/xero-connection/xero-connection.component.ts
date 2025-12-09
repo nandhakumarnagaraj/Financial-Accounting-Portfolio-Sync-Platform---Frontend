@@ -234,28 +234,4 @@ export class XeroConnectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  disconnectXero(): void {
-    if (!confirm('Are you sure you want to disconnect Xero? You will need to reconnect to continue syncing.')) {
-      return;
-    }
-
-    this.xeroService.disconnectXero().subscribe({
-      next: () => {
-        this.xeroConnected = false;
-        this.tenantId = null;
-        this.lastSyncTime = null;
-        this.tokenExpiresAt = null;
-        this.timeUntilExpiry = '';
-        this.toastr.success('Xero disconnected successfully', 'Success');
-        this.cdr.detectChanges(); // Manually trigger change detection
-      },
-      error: (err) => {
-        this.toastr.error(
-          err.error?.message || 'Failed to disconnect Xero',
-          'Error'
-        );
-        this.cdr.detectChanges(); // Manually trigger change detection after error
-      }
-    });
-  }
 }

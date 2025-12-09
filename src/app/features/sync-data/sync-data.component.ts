@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { XeroService } from '../../core/services/xero.service';
 import { ToastrService } from 'ngx-toastr';
@@ -21,7 +21,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './sync-data.component.html',
   styleUrls: ['./sync-data.component.scss']
 })
-export class SyncDataComponent {
+export class SyncDataComponent implements OnInit {
   isSyncing = {
     invoices: false,
     accounts: false,
@@ -36,12 +36,20 @@ export class SyncDataComponent {
 
   constructor(private xeroService: XeroService, private toastr: ToastrService, private cdr: ChangeDetectorRef) {}
 
+  ngOnInit(): void {
+    const storedSyncData = this.xeroService.getSyncDataTimestamps();
+    if (storedSyncData) {
+      this.lastSync = storedSyncData;
+    }
+  }
+
   syncInvoices() {
     this.isSyncing.invoices = true;
     this.xeroService.syncInvoices().subscribe({
       next: (res) => {
         this.toastr.success(res.message, 'Success');
-        this.lastSync.invoices = new Date() as any;
+        this.lastSync.invoices = new Date().toISOString(); // Store as ISO string
+        this.xeroService.saveSyncDataTimestamps(this.lastSync);
         this.isSyncing.invoices = false;
         this.cdr.detectChanges(); // Manually trigger change detection
       },
@@ -58,7 +66,8 @@ export class SyncDataComponent {
     this.xeroService.syncAccounts().subscribe({
         next: (res) => {
             this.toastr.success(res.message, 'Success');
-            this.lastSync.accounts = new Date() as any;
+            this.lastSync.accounts = new Date().toISOString(); // Store as ISO string
+            this.xeroService.saveSyncDataTimestamps(this.lastSync);
             this.isSyncing.accounts = false;
             this.cdr.detectChanges(); // Manually trigger change detection
         },
@@ -75,7 +84,8 @@ export class SyncDataComponent {
     this.xeroService.syncTransactions().subscribe({
         next: (res) => {
             this.toastr.success(res.message, 'Success');
-            this.lastSync.transactions = new Date() as any;
+            this.lastSync.transactions = new Date().toISOString(); // Store as ISO string
+            this.xeroService.saveSyncDataTimestamps(this.lastSync);
             this.isSyncing.transactions = false;
             this.cdr.detectChanges(); // Manually trigger change detection
         },
@@ -96,9 +106,10 @@ export class SyncDataComponent {
     }).subscribe({
       next: (res) => {
         this.toastr.success('All data synced successfully', 'Success');
-        this.lastSync.invoices = new Date() as any;
-        this.lastSync.accounts = new Date() as any;
-        this.lastSync.transactions = new Date() as any;
+        this.lastSync.invoices = new Date().toISOString(); // Store as ISO string
+        this.lastSync.accounts = new Date().toISOString(); // Store as ISO string
+        this.lastSync.transactions = new Date().toISOString(); // Store as ISO string
+        this.xeroService.saveSyncDataTimestamps(this.lastSync);
         this.isSyncingAll = false;
         this.cdr.detectChanges(); // Manually trigger change detection
       },
